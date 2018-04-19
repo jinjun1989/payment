@@ -96,7 +96,7 @@ class AlipayBaseClient
         $data = urldecode(http_build_query($attributes));
 
         $res = "-----BEGIN RSA PRIVATE KEY-----\n" .
-            wordwrap($this->app->config->get('private_key'), 64, "\n", true) .
+            wordwrap($this->app->config->get('app_private_key'), 64, "\n", true) .
             "\n-----END RSA PRIVATE KEY-----";
 
         if ("RSA2" == $signType) {

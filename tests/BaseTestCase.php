@@ -22,8 +22,17 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
      */
     protected function getPay($driver = null)
     {
+        $filePath = __DIR__.DIRECTORY_SEPARATOR.'../config/payment.dev.php';
+
+        if(file_exists($filePath)){
+
+            $originPath = __DIR__.DIRECTORY_SEPARATOR.'../config/payment.php';
+
+            @copy($originPath, $filePath);
+        }
+
         if(is_null($this->pay)){
-            $this->config = include __DIR__.DIRECTORY_SEPARATOR.'../config/payment.php';
+            $this->config = include $filePath;
             $this->pay = new \OverNick\Payment\PaymentManage($this->config);
         }
 
