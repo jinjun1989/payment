@@ -7,7 +7,7 @@
  */
 namespace OverNick\Payment\Wechat\Refund;
 
-use OverNick\Payment\Kernel\Client\WechatBaseClient;
+use OverNick\Payment\Wechat\WechatBaseClient;
 use OverNick\Payment\Kernel\Interfaces\RefundInterface;
 
 /**

@@ -47,7 +47,7 @@ class OrderTestCase extends BaseTestCase
         $params = [];
 
         BizContent::build([
-            'order_no' => $this->order_no,
+            'out_trade_no' => $this->order_no,
         ], $params);
 
         $result = $this->getPay('alipay')->order->query($params);

@@ -11,12 +11,12 @@ namespace OverNick\Payment\Tests\Wechat;
  * Class BaseTestCase
  * @package OverNick\Payment\Tests\Wechat
  */
-class BaseTestCase extends \OverNick\Payment\Tests\BaseTestCase
+class PayTestCase extends \OverNick\Payment\Tests\BaseTestCase
 {
     /**
      * @test
      */
-    public function pay()
+    public function create()
     {
         $this->getPay('wechatpay')->base->pay([
             'body' => '这是一个商品',

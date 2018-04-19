@@ -17,7 +17,7 @@ use OverNick\Payment\Kernel\ServiceContainer;
  * @property \OverNick\Support\Config                   $config
  * @property \OverNick\Payment\Wechat\Order\Client      $order
  * @property \OverNick\Payment\Wechat\Refund\Client     $refund
- * @property \OverNick\Payment\Wechat\Base\Client       $base
+ * @property \OverNick\Payment\Wechat\Pay\Client        $pay
  *
  * @package OverNick\Payment\Wechat
  */
@@ -29,7 +29,7 @@ class WechatPayApp extends ServiceContainer
     public $baseUrl = 'https://api.mch.weixin.qq.com/';
 
     protected $providers = [
-        Base\ServiceProvider::class,
+        Pay\ServiceProvider::class,
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class
     ];
@@ -44,7 +44,6 @@ class WechatPayApp extends ServiceContainer
         return (bool) $this->config->get('sandbox', false);
     }
 
-
     /**
      * 设置子商户信息
      *
@@ -56,7 +55,7 @@ class WechatPayApp extends ServiceContainer
     public function setSubMerchant($mchId,$appId = null)
     {
         $this->config->set('sub_mch_id', $mchId);
-        $this['config']->set('sub_appid', $appId);
+        $this->config->set('sub_appid', $appId);
 
         return $this;
     }

@@ -18,5 +18,5 @@ interface BaseInterface
      * @param array $params
      * @return mixed
      */
-    public function pay(array $params);
+    public function create(array $params);
 }

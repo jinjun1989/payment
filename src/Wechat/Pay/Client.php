@@ -5,9 +5,9 @@
  * Date: 2018/4/17
  * Time: 15:21
  */
-namespace OverNick\Payment\Wechat\Base;
+namespace OverNick\Payment\Wechat\Pay;
 
-use OverNick\Payment\Kernel\Client\WechatBaseClient;
+use OverNick\Payment\Wechat\WechatBaseClient;
 use OverNick\Payment\Kernel\Interfaces\BaseInterface;
 
 /**
@@ -20,7 +20,7 @@ class Client extends WechatBaseClient implements BaseInterface
      * @param array $params
      * @return array
      */
-    public function pay(array $params)
+    public function create(array $params)
     {
         if (empty($params['spbill_create_ip'])) {
             $params['spbill_create_ip'] = ('NATIVE' === $params['trade_type']) ? get_server_ip() : get_client_ip();

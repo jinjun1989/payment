@@ -19,7 +19,7 @@ class OrderTestCase extends BaseTestCase
             'out_trade_no' => $this->order_no,
             'body' => '测试商品',
             'total_fee' => 1,
-            'trade_type' => 'JSAPI',
+            'trade_type' => 'NATIVE',
         ]);
 
         $this->assertEquals('array', gettype($result));

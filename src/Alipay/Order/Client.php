@@ -7,7 +7,7 @@
  */
 namespace OverNick\Payment\Alipay\Order;
 
-use OverNick\Payment\Kernel\Client\AlipayBaseClient;
+use OverNick\Payment\Alipay\AlipayBaseClient;
 use OverNick\Payment\Kernel\Interfaces\OrderInterface;
 use OverNick\Payment\Kernel\Tools\BizContent;
 
@@ -21,6 +21,7 @@ class Client extends AlipayBaseClient implements OrderInterface
 {
     /**
      * 创建订单
+     * https://docs.open.alipay.com/api_1/alipay.trade.create/
      *
      * @param array $params
      * @return array
@@ -37,6 +38,7 @@ class Client extends AlipayBaseClient implements OrderInterface
 
     /**
      * 预创建订单
+     * https://docs.open.alipay.com/api_1/alipay.trade.precreate/
      *
      * @param array $params
      * @return array
@@ -53,6 +55,7 @@ class Client extends AlipayBaseClient implements OrderInterface
 
     /**
      * 交易查询
+     * https://docs.open.alipay.com/api_1/alipay.trade.query/
      *
      * @param array $params
      * @return array
@@ -98,6 +101,7 @@ class Client extends AlipayBaseClient implements OrderInterface
 
     /**
      * 关闭订单
+     * https://docs.open.alipay.com/api_1/alipay.trade.close/
      *
      * @param array $params
      * @return array

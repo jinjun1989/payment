@@ -17,13 +17,14 @@ use OverNick\Payment\Kernel\ServiceContainer;
  * @property \OverNick\Support\Config               $config
  * @property \OverNick\Payment\Alipay\Order\Client  $order
  * @property \OverNick\Payment\Alipay\Refund\Client $refund
+ * @property \OverNick\Payment\Alipay\Pay\Client    $pay
  *
  * @package OverNick\Payment\Alipay
  */
 class AliPayApp extends ServiceContainer
 {
     protected $providers = [
-        Base\ServiceProvider::class,
+        Pay\ServiceProvider::class,
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class,
     ];

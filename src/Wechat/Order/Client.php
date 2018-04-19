@@ -7,7 +7,7 @@
  */
 namespace OverNick\Payment\Wechat\Order;
 
-use OverNick\Payment\Kernel\Client\WechatBaseClient;
+use OverNick\Payment\Wechat\WechatBaseClient;
 use OverNick\Payment\Kernel\Interfaces\OrderInterface;
 use OverNick\Payment\Kernel\Tools\Xml;
 

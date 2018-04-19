@@ -5,7 +5,7 @@
  * Date: 2018/4/12
  * Time: 18:10
  */
-namespace OverNick\Payment\Kernel\Client;
+namespace OverNick\Payment\Wechat;
 
 use OverNick\Payment\Kernel\ServiceContainer;
 use OverNick\Payment\Kernel\Traits\HttpRequestTrait;
@@ -51,9 +51,9 @@ class WechatBaseClient
      */
     public function getSign($attributes, $key, $encryptMethod = 'md5')
     {
-        $attributes['key'] = $key;
-
         ksort($attributes);
+
+        $attributes['key'] = $key;
 
         return strtoupper(call_user_func_array($encryptMethod, [urldecode(http_build_query($attributes))]));
     }
@@ -95,7 +95,7 @@ class WechatBaseClient
      */
     public function rawRequest($uri, array $params = [], $method = 'post',array $options = [])
     {
-        if(array_key_exists('app_id', $params)){
+        if(!array_key_exists('app_id', $params)){
             $params['appid'] = $this->app->config->get('app_id');
         }
 
@@ -109,6 +109,8 @@ class WechatBaseClient
 
         // 合并成最终参数
         $params = array_merge($base, $params);
+
+
 
         $params['sign'] = $this->getSign($params, $this->app->getKey($uri));
 

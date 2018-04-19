@@ -5,7 +5,7 @@
  * Date: 2018/4/17
  * Time: 16:52
  */
-namespace OverNick\Payment\Kernel\Client;
+namespace OverNick\Payment\Alipay;
 
 use OverNick\Payment\Kernel\ServiceContainer;
 use OverNick\Payment\Kernel\Tools\BizContent;
@@ -61,16 +61,9 @@ class AlipayBaseClient
      * @param array $options
      * @return array
      */
-    public function request( array $params, $method = 'POST',array $options = [])
+    protected function request(array $params, $method = 'POST',array $options = [])
     {
-        $params['app_id'] = $this->app->config->get('app_id');
-        $params['sign_type'] = strtoupper($this->app->config->get('sign_type'));
-        $params['format'] = $this->format;
-        $params['charset'] = $this->chartSet;
-        $params['version'] = $this->version;
-        $params['timestamp'] = date("Y-m-d H:i:s");
-
-        $params['sign'] = $this->getSign($params, $this->app->config->get('sign_type'));
+        $params = $this->buildPrams($params);
 
         $options = array_merge($options, [
             'verify' => false,
@@ -85,11 +78,39 @@ class AlipayBaseClient
     }
 
     /**
+     * @param array $params
+     * @return string
+     */
+    protected function buildUrl(array $params)
+    {
+        $params = $this->buildPrams($params);
+
+        return $this->gateWay() . '?'. http_build_query($params);
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    protected function buildPrams(array $params)
+    {
+        $params['app_id'] = $this->app->config->get('app_id');
+        $params['sign_type'] = strtoupper($this->app->config->get('sign_type'));
+        $params['format'] = $this->format;
+        $params['charset'] = $this->chartSet;
+        $params['version'] = $this->version;
+        $params['timestamp'] = date("Y-m-d H:i:s");
+        $params['sign'] = $this->getSign($params, $this->app->config->get('sign_type'));
+
+        return $params;
+    }
+
+    /**
      * @param array $attributes
      * @param string $signType
      * @return string
      */
-    public function getSign(array $attributes, $signType = 'RSA2')
+    protected function getSign(array $attributes, $signType = 'RSA2')
     {
         ksort($attributes);
 
@@ -104,7 +125,9 @@ class AlipayBaseClient
         } else {
             openssl_sign($data, $sign, $res);
         }
+
         $sign = base64_encode($sign);
+
         return $sign;
     }
 

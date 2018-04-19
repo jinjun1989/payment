@@ -6,7 +6,7 @@
  * Time: 15:21
  */
 
-namespace OverNick\Payment\Wechat\Base;
+namespace OverNick\Payment\Wechat\Pay;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -22,7 +22,7 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['base'] = function () use($app){
+        $app['pay'] = function () use($app){
             return new Client($app);
         };
     }

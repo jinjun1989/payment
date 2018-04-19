@@ -7,7 +7,7 @@
  */
 namespace OverNick\Payment\Alipay\Refund;
 
-use OverNick\Payment\Kernel\Client\AlipayBaseClient;
+use OverNick\Payment\Alipay\AlipayBaseClient;
 use OverNick\Payment\Kernel\Interfaces\RefundInterface;
 use OverNick\Payment\Kernel\Tools\BizContent;
 
@@ -21,6 +21,7 @@ class Client extends AlipayBaseClient implements RefundInterface
 {
     /**
      * 创建退款
+     * https://docs.open.alipay.com/api_1/alipay.trade.refund/
      *
      * @param array $params
      * @return array
@@ -34,6 +35,7 @@ class Client extends AlipayBaseClient implements RefundInterface
 
     /**
      * 退款查询
+     * https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query/
      *
      * @param array $params
      * @return array

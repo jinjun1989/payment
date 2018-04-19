@@ -19,16 +19,19 @@ class BizContent
      */
     public static function build($attributes, array &$params = [])
     {
-        $params['biz_content'] = self::enCodeToUtf8(json_encode($attributes, JSON_UNESCAPED_UNICODE));
+        $params['biz_content'] = self::enCodeToUtf8(json_encode($attributes));
     }
 
     /**
+     * 字符转码
+     *
      * @param $string
+     * @param $from_encoding
      * @return string
      */
-    public static function enCodeToUtf8($string)
+    public static function enCodeToUtf8($string, $from_encoding = 'GBK')
     {
-        return mb_convert_encoding($string, 'UTF-8');
+        return mb_convert_encoding($string, 'UTF-8', $from_encoding);
     }
 
     /**

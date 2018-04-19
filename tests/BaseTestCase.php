@@ -1,6 +1,6 @@
 <?php
-
 namespace OverNick\Payment\Tests;
+
 use OverNick\Payment\Alipay\AliPayApp;
 use OverNick\Payment\Wechat\WechatPayApp;
 
@@ -14,6 +14,9 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
      */
     protected $pay;
 
+    /**
+     * @var array
+     */
     protected $config = [];
 
     /**
@@ -24,10 +27,8 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
     {
         $filePath = __DIR__.DIRECTORY_SEPARATOR.'../config/payment.dev.php';
 
-        if(file_exists($filePath)){
-
+        if(!file_exists($filePath)){
             $originPath = __DIR__.DIRECTORY_SEPARATOR.'../config/payment.php';
-
             @copy($originPath, $filePath);
         }
 
