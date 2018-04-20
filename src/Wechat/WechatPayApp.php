@@ -7,6 +7,7 @@
  */
 namespace OverNick\Payment\Wechat;
 
+use Closure;
 use OverNick\Payment\Kernel\ServiceContainer;
 
 /**
@@ -29,6 +30,7 @@ class WechatPayApp extends ServiceContainer
     public $baseUrl = 'https://api.mch.weixin.qq.com/';
 
     protected $providers = [
+        SandBox\ServiceProvider::class,
         Pay\ServiceProvider::class,
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class
@@ -58,6 +60,46 @@ class WechatPayApp extends ServiceContainer
         $this->config->set('sub_appid', $appId);
 
         return $this;
+    }
+
+    /**
+     * @param \Closure $closure
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     */
+    public function handlePaidNotify(Closure $closure)
+    {
+        return (new Notify\Paid($this))->handle($closure);
+    }
+
+    /**
+     *
+     * @param Closure $closure
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     */
+    public function handleRefundedNotify(Closure $closure)
+    {
+        return (new Notify\Refunded($this))->handle($closure);
+    }
+
+    /**
+     * @param $attributes
+     * @param $key
+     * @param string $encryptMethod
+     * @return string
+     */
+    public function getSign($attributes, $key, $encryptMethod = 'md5')
+    {
+        ksort($attributes);
+
+        $attributes['key'] = $key;
+
+        return strtoupper(call_user_func_array($encryptMethod, [urldecode(http_build_query($attributes))]));
     }
 
     /**

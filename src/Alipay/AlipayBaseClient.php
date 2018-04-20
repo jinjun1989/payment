@@ -100,35 +100,9 @@ class AlipayBaseClient
         $params['charset'] = $this->chartSet;
         $params['version'] = $this->version;
         $params['timestamp'] = date("Y-m-d H:i:s");
-        $params['sign'] = $this->getSign($params, $this->app->config->get('sign_type'));
+        $params['sign'] = $this->app->getSign($params, $this->app->config->get('sign_type'));
 
         return $params;
-    }
-
-    /**
-     * @param array $attributes
-     * @param string $signType
-     * @return string
-     */
-    protected function getSign(array $attributes, $signType = 'RSA2')
-    {
-        ksort($attributes);
-
-        $data = urldecode(http_build_query($attributes));
-
-        $res = "-----BEGIN RSA PRIVATE KEY-----\n" .
-            wordwrap($this->app->config->get('app_private_key'), 64, "\n", true) .
-            "\n-----END RSA PRIVATE KEY-----";
-
-        if ("RSA2" == $signType) {
-            openssl_sign($data, $sign, $res, OPENSSL_ALGO_SHA256);
-        } else {
-            openssl_sign($data, $sign, $res);
-        }
-
-        $sign = base64_encode($sign);
-
-        return $sign;
     }
 
     /**

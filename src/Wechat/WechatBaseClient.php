@@ -44,21 +44,6 @@ class WechatBaseClient
     }
 
     /**
-     * @param $attributes
-     * @param $key
-     * @param string $encryptMethod
-     * @return string
-     */
-    public function getSign($attributes, $key, $encryptMethod = 'md5')
-    {
-        ksort($attributes);
-
-        $attributes['key'] = $key;
-
-        return strtoupper(call_user_func_array($encryptMethod, [urldecode(http_build_query($attributes))]));
-    }
-
-    /**
      * 获取请求地址
      *
      * @param string $url
@@ -110,9 +95,7 @@ class WechatBaseClient
         // 合并成最终参数
         $params = array_merge($base, $params);
 
-
-
-        $params['sign'] = $this->getSign($params, $this->app->getKey($uri));
+        $params['sign'] = $this->app->getSign($params, $this->app->getKey($uri));
 
         $options = array_merge($options, [
             'verify' => false,

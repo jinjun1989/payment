@@ -7,6 +7,7 @@
  */
 namespace OverNick\Payment\Alipay;
 
+use Closure;
 use OverNick\Payment\Kernel\ServiceContainer;
 
 /**
@@ -37,5 +38,43 @@ class AliPayApp extends ServiceContainer
     public function inSandBox()
     {
         return (bool) $this->config->get('sandbox', false);
+    }
+
+    /**
+     * @param Closure $closure
+     * @return string
+     */
+    public function handlePaidNotify(Closure $closure)
+    {
+        return (new Notify\Paid($this))->handle($closure);
+    }
+
+    /**
+     * @param array $attributes
+     * @param string $signType
+     * @param null|string $key
+     * @return string
+     */
+    public function getSign(array $attributes, $signType = 'RSA2', $key = null)
+    {
+        if (is_null($key)) $key = $this->app->config->get('app_private_key');
+
+        ksort($attributes);
+
+        $data = urldecode(http_build_query($attributes));
+
+        $res = "-----BEGIN RSA PRIVATE KEY-----\n" .
+            wordwrap($key, 64, "\n", true) .
+            "\n-----END RSA PRIVATE KEY-----";
+
+        if ("RSA2" == $signType) {
+            openssl_sign($data, $sign, $res, OPENSSL_ALGO_SHA256);
+        } else {
+            openssl_sign($data, $sign, $res);
+        }
+
+        $sign = base64_encode($sign);
+
+        return $sign;
     }
 }

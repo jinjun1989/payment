@@ -37,6 +37,8 @@ class PayTestCase extends TestCase
 
         $result = $this->getPay('alipay')->pay->wap($params);
 
+        var_dump($result);die;
+
         $this->assertEquals('string', gettype($result));
     }
 
