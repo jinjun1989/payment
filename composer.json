@@ -2,7 +2,7 @@
     "name": "overnic/payment",
     "description": "alipay and wechat pay sdk",
     "type": "library",
-    "license": "Apache License",
+    "license": "MIT",
     "authors": [
         {
             "name": "overnick",
