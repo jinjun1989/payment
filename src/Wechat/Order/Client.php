@@ -71,7 +71,7 @@ class Client extends WechatBaseClient implements OrderInterface
     public function queryByOrderTradeNo($trade_no)
     {
         return $this->query([
-            'order_trade_no' => $trade_no
+            'out_trade_no' => $trade_no
         ]);
     }
 
