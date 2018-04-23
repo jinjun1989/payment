@@ -33,10 +33,15 @@ class QrCode
     protected $content;
 
     /**
+     * @Writer
+     */
+    protected $write;
+
+    /**
      * QrCode constructor.
      * @param string $content
      */
-    public function __construct($content = '')
+    public function __construct($content)
     {
         $this->content = $content;
         $this->png = new Png();
@@ -63,14 +68,35 @@ class QrCode
     }
 
     /**
-     *
+     * @return Writer
+     */
+    public function getWrite()
+    {
+        if(is_null($this->write)){
+            $this->png->setWidth($this->with);
+            $this->png->setHeight($this->height);
+            $this->write = new Writer($this->png);
+        }
+        return $this->write;
+    }
+
+    /**
+     * 直接输出图片
      */
     public function write()
     {
-        $write = new Writer($this->png);
-
         header("Content-type:image/png");
 
-        echo $write->writeString($this->content);die;
+        echo $this->getWrite()->writeString($this->content);die;
+    }
+
+    /**
+     * 返回图片字符
+     *
+     * @return string
+     */
+    public function content()
+    {
+        return $this->getWrite()->writeString($this->content);
     }
 }
