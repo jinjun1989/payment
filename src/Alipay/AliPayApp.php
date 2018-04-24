@@ -57,7 +57,7 @@ class AliPayApp extends ServiceContainer
      */
     public function getSign(array $attributes, $signType = 'RSA2', $key = null)
     {
-        if (is_null($key)) $key = $this->app->config->get('app_private_key');
+        if (is_null($key)) $key = $this->config->get('app_private_key');
 
         ksort($attributes);
 
@@ -76,5 +76,30 @@ class AliPayApp extends ServiceContainer
         $sign = base64_encode($sign);
 
         return $sign;
+    }
+
+    /**
+     * @param array $attributes
+     * @param string $signType
+     * @param $sign
+     * @return int
+     */
+    public function verifySign(array $attributes, $signType = 'RSA2', $sign)
+    {
+        ksort($attributes);
+
+        $data = urldecode(http_build_query($attributes));
+
+        $res = "-----BEGIN PUBLIC KEY-----\n" .
+            wordwrap($this->config->get('alipay_public_key'), 64, "\n", true) .
+            "\n-----END PUBLIC KEY-----";
+
+        if ("RSA2" == $signType) {
+            $result = openssl_verify($data, base64_decode($sign), $res, OPENSSL_ALGO_SHA256);
+        } else {
+            $result = openssl_verify($data, base64_decode($sign), $res);
+        }
+
+        return $result;
     }
 }

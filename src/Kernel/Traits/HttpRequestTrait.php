@@ -33,7 +33,7 @@ trait HttpRequestTrait
     public function getHttpClient()
     {
         if(is_null($this->httpClient)){
-            $this->httpClient = $this->app['http_client'] ?: new Client();
+            $this->httpClient = array_key_exists('http_client',$this->app) ? $this->app['http_client'] : new Client();;
         }
 
         return $this->httpClient;

@@ -27,13 +27,17 @@ abstract class Handler extends NotifyAbstract
      */
     protected function validate(array $message)
     {
+        if(!array_key_exists('sign',$message) || !array_key_exists('sign_type', $message)){
+            throw new InvalidArgumentException('argument sign is not defined');
+        }
+
         $sign = $message['sign'];
 
         $signType = $message['sign_type'];
 
         unset($message['sign'], $message['sign_type']);
 
-        if($this->app->getSign($message, $signType, $this->app->config->get('alipay_public_key')) !== $sign){
+        if(!$this->app->verifySign($message, $signType, $sign)){
             throw new InvalidArgumentException('notify sign fail');
         }
 
