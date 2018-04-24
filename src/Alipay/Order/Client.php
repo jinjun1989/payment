@@ -30,7 +30,7 @@ class Client extends AlipayBaseClient implements OrderInterface
     {
         $params = array_merge($params, [
             'method' => 'alipay.trade.create',
-            'notify_url' => $params['notify_url'] ?? $this->app->config->get('notify_url')
+            'notify_url' => $params['notify_url'] ? : $this->app->config->get('notify_url')
         ]);
 
         return $this->request($params);
@@ -47,7 +47,7 @@ class Client extends AlipayBaseClient implements OrderInterface
     {
         $params = array_merge($params, [
             'method' => 'alipay.trade.precreate',
-            'notify_url' => $params['notify_url'] ?? $this->app->config->get('notify_url')
+            'notify_url' => $params['notify_url'] ? : $this->app->config->get('notify_url')
         ]);
 
         return $this->request($params);
