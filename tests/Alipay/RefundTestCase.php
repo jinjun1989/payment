@@ -27,7 +27,7 @@ class RefundTestCase extends BaseTestCase
         BizContent::build([
             'out_trade_no' => $this->order_no,
             'out_request_no' => $this->out_request_no,
-            'refund_amount ' => 0.01,
+            'refund_amount' => 0.01,
             'refund_reason' => '不想要了'
         ], $params);
 

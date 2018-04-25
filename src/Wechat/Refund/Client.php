@@ -26,7 +26,7 @@ class Client extends WechatBaseClient implements RefundInterface
      */
     public function create(array $params)
     {
-        return $this->rawRequest($this->warp('secapi/pay/refund'), $params);
+        return $this->SafeRequest($this->warp('secapi/pay/refund'), $params);
     }
 
     /**
