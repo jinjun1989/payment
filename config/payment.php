@@ -13,6 +13,7 @@ return [
          *
          */
         'alipay' => [
+            'driver' => \OverNick\Payment\PaymentManage::DRIVER_ALIPAY,
             // 沙盒模式
             'sandbox' => false,
             //合作身份者ID，签约账号，以2088开头由16位纯数字组成的字符串，查看地址：https://b.alipay.com/order/pidAndKey.htm
@@ -36,6 +37,7 @@ return [
          *
          */
         'wechatpay' => [
+            'driver' => \OverNick\Payment\PaymentManage::DRIVER_WECHATPAY,
             // 沙盒模式
             'sandbox' => false,
             'app_id' => 'xxxx',

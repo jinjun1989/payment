@@ -24,6 +24,10 @@ use OverNick\Support\Manager;
  */
 class PaymentManage extends Manager
 {
+
+    const DRIVER_WECHATPAY = 'wechatpay';
+    const DRIVER_ALIPAY = 'alipay';
+
     /**
      * @return mixed
      */
@@ -37,7 +41,7 @@ class PaymentManage extends Manager
      */
     protected function createAlipayDriver()
     {
-        return new AliPayApp($this->getConfigure('drivers.alipay'));
+        return new AliPayApp($this->getConfigure('drivers.'.self::DRIVER_ALIPAY));
     }
 
     /**
@@ -45,7 +49,7 @@ class PaymentManage extends Manager
      */
     protected function createWechatPayDriver()
     {
-        return new WechatPayApp($this->getConfigure('drivers.wechatpay'));
+        return new WechatPayApp($this->getConfigure('drivers.'.self::DRIVER_WECHATPAY));
     }
 
     /**

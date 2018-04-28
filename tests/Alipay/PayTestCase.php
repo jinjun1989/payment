@@ -8,6 +8,7 @@
 namespace OverNick\Payment\Tests\Alipay;
 
 use OverNick\Payment\Kernel\Tools\BizContent;
+use OverNick\Payment\PaymentManage;
 use OverNick\Payment\Tests\BaseTestCase as TestCase;
 
 /**
@@ -16,6 +17,7 @@ use OverNick\Payment\Tests\BaseTestCase as TestCase;
  */
 class PayTestCase extends TestCase
 {
+    protected $driver = PaymentManage::DRIVER_ALIPAY;
     /**
      * @test
      */
@@ -35,9 +37,7 @@ class PayTestCase extends TestCase
             'qr_pay_mode' => 3,
         ], $params);
 
-        $result = $this->getPay('alipay')->pay->wap($params);
-
-        var_dump($result);die;
+        $result = $this->getPay($this->driver)->pay->wap($params);
 
         $this->assertEquals('string', gettype($result));
     }
@@ -61,7 +61,7 @@ class PayTestCase extends TestCase
             'qr_pay_mode' => 3,
         ], $params);
 
-        $result = $this->getPay('alipay')->pay->page($params);
+        $result = $this->getPay($this->driver)->pay->page($params);
 
         $this->assertEquals('string', gettype($result));
     }
@@ -84,7 +84,7 @@ class PayTestCase extends TestCase
             'auto_code' => '12345678902123'
         ], $params);
 
-        $result = $this->getPay('alipay')->pay->create($params);
+        $result = $this->getPay($this->driver)->pay->create($params);
 
         $this->assertEquals('array', gettype($result));
     }

@@ -1,6 +1,7 @@
 <?php
 namespace OverNick\Payment\Tests\Wechat;
 
+use OverNick\Payment\PaymentManage;
 use OverNick\Payment\Tests\BaseTestCase;
 
 /**
@@ -10,12 +11,13 @@ class OrderTestCase extends BaseTestCase
 {
     protected $order_no = '201904160001';
 
+    protected $driver = PaymentManage::DRIVER_WECHATPAY;
     /**
      * @test
      */
     public function create()
     {
-        $result = $this->getPay('wechatpay')->order->create([
+        $result = $this->getPay($this->driver)->order->create([
             'out_trade_no' => $this->order_no,
             'body' => '测试商品',
             'total_fee' => 1,
@@ -30,7 +32,7 @@ class OrderTestCase extends BaseTestCase
      */
     public function query()
     {
-        $result = $this->getPay('wechatpay')->order->queryByOrderTradeNo($this->order_no);
+        $result = $this->getPay($this->driver)->order->queryByOrderTradeNo($this->order_no);
 
         $this->assertEquals('array', gettype($result));
     }
@@ -40,7 +42,7 @@ class OrderTestCase extends BaseTestCase
      */
     public function close()
     {
-        $result = $this->getPay('wechatpay')->order->close($this->order_no);
+        $result = $this->getPay($this->driver)->order->close($this->order_no);
 
         $this->assertEquals('array', gettype($result));
     }
