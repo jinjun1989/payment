@@ -17,11 +17,15 @@ class OrderTestCase extends BaseTestCase
      */
     public function create()
     {
+        $notify = 'http://www.baidu.com';
+
         $result = $this->getPay($this->driver)->order->create([
             'out_trade_no' => $this->order_no,
             'body' => '测试商品',
             'total_fee' => 1,
+            'notify_url' => $notify,
             'trade_type' => 'NATIVE',
+            'time_stamp' => time()
         ]);
 
         $this->assertEquals('array', gettype($result));
