@@ -106,6 +106,20 @@ class AlipayBaseClient
     }
 
     /**
+     * 合并提交
+     *
+     * @param array $bizContent
+     * @param array $params
+     * @return array
+     */
+    protected function requestMerge(array $bizContent = [],array $params = [])
+    {
+        BizContent::build($bizContent, $params);
+
+        return $this->request($params);
+    }
+
+    /**
      * @return string
      */
     protected function gateWay()

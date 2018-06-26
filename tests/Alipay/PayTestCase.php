@@ -18,6 +18,7 @@ use OverNick\Payment\Tests\BaseTestCase as TestCase;
 class PayTestCase extends TestCase
 {
     protected $driver = PaymentManage::DRIVER_ALIPAY;
+
     /**
      * @test
      */
@@ -28,16 +29,16 @@ class PayTestCase extends TestCase
             'return_url' => 'http://localhost/pay/ali/orderReturn'
         ];
 
-        BizContent::build([
+        $bizContent = [
             'out_trade_no' => 'D20190102001111'.mt_rand(100,9999),
             'product_code' => 'FAST_INSTANT_TRADE_PAY',
             'subject' => '订单支付',
             'body' => 'O126 PP 17 CRYSTAL  (001) 白色  G SMALL等商品',
             'total_amount' => 0.02,
             'qr_pay_mode' => 3,
-        ], $params);
+        ];
 
-        $result = $this->getPay($this->driver)->pay->wap($params);
+        $result = $this->getPay($this->driver)->pay->wap($bizContent, $params);
 
         $this->assertEquals('string', gettype($result));
     }
@@ -52,16 +53,16 @@ class PayTestCase extends TestCase
             'return_url' => 'http://localhost/pay/ali/orderReturn'
         ];
 
-        BizContent::build([
+        $bizContent = [
             'out_trade_no' => 'D20190102001111'.mt_rand(100,9999),
             'product_code' => 'FAST_INSTANT_TRADE_PAY',
             'subject' => '订单支付',
             'body' => 'O126 PP 17 CRYSTAL  (001) 白色  G SMALL等商品',
             'total_amount' => 0.02,
             'qr_pay_mode' => 3,
-        ], $params);
+        ];
 
-        $result = $this->getPay($this->driver)->pay->page($params);
+        $result = $this->getPay($this->driver)->pay->page($bizContent,$params);
 
         $this->assertEquals('string', gettype($result));
     }
@@ -75,16 +76,16 @@ class PayTestCase extends TestCase
             'notify_url' => 'http://123456789.cn'
         ];
 
-        BizContent::build([
+        $bizContent = [
             'subject' => '商品购买2',
             'out_trade_no' => '201904160011',
             'scene' => 'bar_code',
             'body' => 'iPhone X 赠送贴膜',
             'total_amount' => 0.01,
             'auto_code' => '12345678902123'
-        ], $params);
+        ];
 
-        $result = $this->getPay($this->driver)->pay->create($params);
+        $result = $this->getPay($this->driver)->pay->create($bizContent, $params);
 
         $this->assertEquals('array', gettype($result));
     }

@@ -12,6 +12,7 @@ class OrderTestCase extends BaseTestCase
     protected $order_no = '201904160001';
 
     protected $driver = PaymentManage::DRIVER_WECHATPAY;
+
     /**
      * @test
      */
@@ -24,8 +25,7 @@ class OrderTestCase extends BaseTestCase
             'body' => '测试商品',
             'total_fee' => 1,
             'notify_url' => $notify,
-            'trade_type' => 'NATIVE',
-            'time_stamp' => time()
+            'trade_type' => 'NATIVE'
         ]);
 
         $this->assertEquals('array', gettype($result));

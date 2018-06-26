@@ -8,6 +8,7 @@
 namespace OverNick\Payment\Kernel;
 
 use Closure;
+use OverNick\Payment\Wechat\WechatPayApp;
 
 /**
  * Class NotifyAbstract
@@ -16,7 +17,7 @@ use Closure;
 abstract class NotifyAbstract
 {
     /**
-     * @var
+     * @var WechatPayApp
      */
     protected $app;
 

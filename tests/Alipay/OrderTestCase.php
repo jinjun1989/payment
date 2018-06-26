@@ -22,6 +22,8 @@ class OrderTestCase extends BaseTestCase
     protected $driver = PaymentManage::DRIVER_ALIPAY;
 
     /**
+     * 统一下单
+     *
      * @test
      */
     public function create()
@@ -30,46 +32,42 @@ class OrderTestCase extends BaseTestCase
             'notify_url' => 'http://123456789.cn'
         ];
 
-        BizContent::build([
+        $bizContent = [
             'out_trade_no' => $this->order_no,
             'total_amount' => 0.01,
             'subject' => '购买商品',
             'body' => '购买一部iPhoneX'
-        ], $params);
+        ];
 
-        $result = $this->getPay($this->driver)->order->create($params);
+        $result = $this->getPay($this->driver)->order->create($bizContent, $params);
 
         $this->assertEquals('array', gettype($result));
     }
 
     /**
+     * 查询订单
+     *
      * @test
      */
     public function query()
     {
-        $params = [];
-
-        BizContent::build([
+        $result = $this->getPay($this->driver)->order->query([
             'out_trade_no' => $this->order_no,
-        ], $params);
-
-        $result = $this->getPay($this->driver)->order->query($params);
+        ]);
 
         $this->assertEquals('array', gettype($result));
     }
 
     /**
+     * 关闭订单
+     *
      * @test
      */
     public function close()
     {
-        $params = [];
-
-        BizContent::build([
+        $result = $this->getPay($this->driver)->order->query([
             'out_trade_no ' => $this->order_no,
-        ], $params);
-
-        $result = $this->getPay($this->driver)->order->query($params);
+        ]);
 
         $this->assertEquals('array', gettype($result));
     }

@@ -23,48 +23,51 @@ class Client extends AlipayBaseClient implements OrderInterface
      * 创建订单
      * https://docs.open.alipay.com/api_1/alipay.trade.create/
      *
+     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function create(array $params = [])
+    public function create(array $bizContent = [], array $params = [])
     {
-        $params = array_merge($params, [
+        $params = array_merge([
             'method' => 'alipay.trade.create',
-            'notify_url' => $params['notify_url'] ? : $this->app->config->get('notify_url')
-        ]);
+            'notify_url' => $this->app->config->get('notify_url')
+        ], $params);
 
-        return $this->request($params);
+        return $this->requestMerge($bizContent, $params);
     }
 
     /**
      * 预创建订单
      * https://docs.open.alipay.com/api_1/alipay.trade.precreate/
      *
+     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function preCreate(array $params = [])
+    public function preCreate(array $bizContent = [],array $params = [])
     {
         $params = array_merge($params, [
             'method' => 'alipay.trade.precreate',
             'notify_url' => $params['notify_url'] ? : $this->app->config->get('notify_url')
         ]);
 
-        return $this->request($params);
+        return $this->requestMerge($bizContent, $params);
     }
 
     /**
      * 交易查询
      * https://docs.open.alipay.com/api_1/alipay.trade.query/
      *
+     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function query(array $params = [])
+    public function query(array $bizContent = [], array $params = [])
     {
         $params['method'] = 'alipay.trade.query';
 
-        return $this->request($params);
+        return $this->requestMerge($bizContent, $params);
     }
 
     /**
@@ -76,11 +79,9 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function queryByOutTradeNo($out_trade_no, array $params = [])
     {
-        BizContent::build([
+        return $this->query([
             'out_trade_no' => $out_trade_no
         ], $params);
-
-        return $this->query($params);
     }
 
     /**
@@ -92,25 +93,24 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function queryByTradeNo($trade_no, array $params = [])
     {
-        BizContent::build([
+        return $this->query([
             'trade_no' => $trade_no
         ], $params);
-
-        return $this->query( $params);
     }
 
     /**
      * 关闭订单
      * https://docs.open.alipay.com/api_1/alipay.trade.close/
      *
+     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function close(array $params = [])
+    public function close(array $bizContent = [], array $params = [])
     {
         $params['method'] = 'alipay.trade.close';
 
-        return $this->request($params);
+        return $this->requestMerge($bizContent, $params);
     }
 
     /**
@@ -122,11 +122,9 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function closeByOutTradeNo($out_trade_no, array $params = [])
     {
-        BizContent::build([
+        return $this->close([
             'out_trade_no' => $out_trade_no
-        ], $params);
-
-        return $this->close($params);
+        ]);
     }
 
     /**
@@ -138,11 +136,8 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function closeByTradeNo($trade_no, array $params = [])
     {
-        BizContent::build([
+        return $this->close([
             'trade_no' => $trade_no
-        ], $params);
-
-        return $this->close($params);
+        ]);
     }
-
 }

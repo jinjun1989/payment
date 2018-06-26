@@ -17,6 +17,9 @@ use OverNick\Payment\Kernel\Interfaces\BaseInterface;
 class Client extends WechatBaseClient implements BaseInterface
 {
     /**
+     * 二维码/条形码支付
+     * https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
+     *
      * @param array $params
      * @return array
      */

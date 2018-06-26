@@ -21,21 +21,20 @@ class RefundTestCase extends BaseTestCase
     protected $driver = PaymentManage::DRIVER_ALIPAY;
 
     /**
+     * 创建退款
+     *
      * @test
      */
     public function create()
     {
-        $params = [
-        ];
-
-        BizContent::build([
+        $bizContent = [
             'out_trade_no' => $this->order_no,
             'out_request_no' => $this->out_request_no,
             'refund_amount' => 0.01,
             'refund_reason' => '不想要了'
-        ], $params);
+        ];
 
-        $result = $this->getPay($this->driver)->refund->create($params);
+        $result = $this->getPay($this->driver)->refund->create($bizContent);
 
         $this->assertEquals('array', gettype($result));
     }
@@ -45,12 +44,10 @@ class RefundTestCase extends BaseTestCase
      */
     public function query()
     {
-        BizContent::build([
+        $result = $this->getPay($this->driver)->refund->query([
             'out_trade_no' => $this->order_no,
             'out_request_no' => $this->out_request_no
-        ], $params = []);
-
-        $result = $this->getPay($this->driver)->refund->query($params);
+        ]);
 
         $this->assertEquals('array', gettype($result));
     }

@@ -23,28 +23,30 @@ class Client extends AlipayBaseClient implements RefundInterface
      * 创建退款
      * https://docs.open.alipay.com/api_1/alipay.trade.refund/
      *
+     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function create(array $params)
+    public function create(array $bizContent, array $params = [])
     {
         $params['method'] = 'alipay.trade.refund';
 
-        return $this->request($params);
+        return $this->requestMerge($bizContent, $params);
     }
 
     /**
      * 退款查询
      * https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query/
      *
+     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function query(array $params)
+    public function query(array $bizContent,array $params = [])
     {
         $params['method'] = 'alipay.trade.fastpay.refund.query';
 
-        return $this->request($params);
+        return $this->requestMerge($bizContent, $params);
     }
 
     /**
@@ -57,12 +59,10 @@ class Client extends AlipayBaseClient implements RefundInterface
      */
     public function queryByTradeNo($trade_no, $out_request_no, array $params = [])
     {
-        BizContent::build([
+        return $this->query([
             'trade_no' => $trade_no,
             'out_request_no' => $out_request_no
         ], $params);
-
-        return $this->query($params);
     }
 
     /**
@@ -75,11 +75,9 @@ class Client extends AlipayBaseClient implements RefundInterface
      */
     public function queryByOutTradeNo($out_trade_no, $out_request_no, array $params = [])
     {
-        BizContent::build([
+        return $this->query([
             'out_trade_no' => $out_trade_no,
             'out_request_no' => $out_request_no
         ], $params);
-
-        return $this->query($params);
     }
 }

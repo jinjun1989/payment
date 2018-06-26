@@ -12,7 +12,6 @@ use Pimple\Container;
  * @property \GuzzleHttp\Client                         $http_client
  * @property Collection                                 $config
  * @property \Monolog\Logger                            $log
- * @author overtrue <i@overtrue.me>
  *
  */
 class ServiceContainer extends Container

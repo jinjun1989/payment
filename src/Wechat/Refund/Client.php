@@ -20,6 +20,7 @@ class Client extends WechatBaseClient implements RefundInterface
 {
     /**
      * 提交退款
+     * https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_4
      *
      * @param array $params
      * @return array
@@ -30,7 +31,8 @@ class Client extends WechatBaseClient implements RefundInterface
     }
 
     /**
-     * 订单查询
+     * 退款订单查询
+     * https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_5
      *
      * @param array $params
      * @return array

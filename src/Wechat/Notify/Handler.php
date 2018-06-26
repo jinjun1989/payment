@@ -71,6 +71,10 @@ abstract class Handler extends NotifyAbstract
             $this->validate($message);
         }
 
+        if(method_exists($this, 'verifyMessage')){
+            $this->verifyMessage($message);
+        }
+
         return $this->messages = $message;
     }
 

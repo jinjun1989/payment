@@ -1,19 +1,21 @@
 <?php
 
+use OverNick\Payment\PaymentManage;
+
 return [
     /**
-     *
+     * 默认调用的支付方式
      */
-    'default' => 'alipay',
+    'default' => PaymentManage::DRIVER_ALIPAY,
     /**
      *
      */
     'drivers' => [
         /**
-         *
+         * 支付宝支付
          */
         'alipay' => [
-            'driver' => \OverNick\Payment\PaymentManage::DRIVER_ALIPAY,
+            'driver' => PaymentManage::DRIVER_ALIPAY,
             // 沙盒模式
             'sandbox' => false,
             //合作身份者ID，签约账号，以2088开头由16位纯数字组成的字符串，查看地址：https://b.alipay.com/order/pidAndKey.htm
@@ -34,10 +36,10 @@ return [
             'partner' => 'xxxxxxx',
         ],
         /**
-         *
+         * 微信支付
          */
         'wechatpay' => [
-            'driver' => \OverNick\Payment\PaymentManage::DRIVER_WECHATPAY,
+            'driver' => PaymentManage::DRIVER_WECHATPAY,
             // 沙盒模式
             'sandbox' => false,
             'app_id' => 'xxxx',
