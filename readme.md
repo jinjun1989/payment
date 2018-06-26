@@ -149,7 +149,7 @@ $pay->refund->queryByOutRefundNo('商户退款单号')
         return true;
    }) 
 ```
-#####  扫码支付
+#####  微信扫码支付
 ```
 // 扫码支付
 $result = $this->getPay($this->driver)->base->pay([
@@ -159,6 +159,24 @@ $result = $this->getPay($this->driver)->base->pay([
     'auth_code' => '120061098828009406' // 微信支付码，扫描二维码或条形码结果
 ]);
 ```
+
+##### 生成二维码
+```
+// 实例化二维码类
+$qrcode = new OverNick\Payment\Kerner\Tools\QrCode('二维码内容');
+// 设置二维码长度
+$qrcode->setWith(250);
+// 设置二维码宽度
+$qrcode->setHeight(250);
+
+
+// 获取二维码图片内容
+$content = $qrcode->content();
+
+// 直接输出图片
+$qrcode->write();
+```
+
 ### 支付宝支付
 1. 所有的方法请求都会返回一个数组（array），数组内容为微信返回值，可根据实际情况进行处理
 2. 更换支付方式
