@@ -93,11 +93,11 @@ class WechatPayApp extends ServiceContainer
      * @param string $encryptMethod
      * @return string
      */
-    public function getSign($attributes, $key, $encryptMethod = 'md5')
+    public function getSign($attributes, $key = null, $encryptMethod = 'md5')
     {
         ksort($attributes);
 
-        $attributes['key'] = $key;
+        $attributes['key'] = $key ?: $this->getKey();
 
         return strtoupper(call_user_func_array($encryptMethod, [urldecode(http_build_query($attributes))]));
     }

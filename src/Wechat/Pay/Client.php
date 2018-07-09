@@ -31,4 +31,27 @@ class Client extends WechatBaseClient implements BaseInterface
 
         return $this->rawRequest($this->warp('pay/micropay'), $params);
     }
+
+    /**
+     * 生成jssdk getBrandWCPayRequest 所需的参数
+     * https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
+     *
+     * @param string $prepay_id 统一下单接口返回的预付id（prepay_id)
+     * @return array
+     */
+    public function jsApi($prepay_id)
+    {
+        $result = [
+            'appId' => $this->app->config->get('app_id'),
+            'timeStamp' => time(),
+            'nonceStr' => uniqid(),
+            'package' => 'prepay_id='.$prepay_id,
+            'signType' => 'MD5',
+        ];
+
+        $result['paySign'] = $this->app->getSign($result);
+
+        return $result;
+    }
+
 }

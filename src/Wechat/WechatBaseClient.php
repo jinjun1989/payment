@@ -21,7 +21,7 @@ class WechatBaseClient
     use HttpRequestTrait;
 
     /**
-     * @var Container
+     * @var WechatPayApp
      */
     protected $app;
 
@@ -65,7 +65,7 @@ class WechatBaseClient
     {
         $options = array_merge($options, [
             'cert' => $this->app->config->get('cert_path'),
-            'ssl_key' => $this->app['config']->get('key_path'),
+            'ssl_key' => $this->app->config->get('key_path'),
         ]);
 
         return $this->rawRequest($uri, $params, $method, $options);
