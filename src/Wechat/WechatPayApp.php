@@ -19,6 +19,7 @@ use OverNick\Payment\Kernel\ServiceContainer;
  * @property \OverNick\Payment\Wechat\Order\Client      $order
  * @property \OverNick\Payment\Wechat\Refund\Client     $refund
  * @property \OverNick\Payment\Wechat\Pay\Client        $pay
+ * @property \OverNick\Payment\Wechat\Auth\Client       $auth
  *
  * @package OverNick\Payment\Wechat
  */
@@ -27,13 +28,23 @@ class WechatPayApp extends ServiceContainer
     /**
      * @var string
      */
+
+    protected $openUrl = 'https://open.weixin.qq.com';
+
+    /**
+     * @var string
+     */
     public $baseUrl = 'https://api.mch.weixin.qq.com/';
 
+    /**
+     * @var array
+     */
     protected $providers = [
         SandBox\ServiceProvider::class,
         Pay\ServiceProvider::class,
         Order\ServiceProvider::class,
-        Refund\ServiceProvider::class
+        Refund\ServiceProvider::class,
+        Auth\ServiceProvider::class,
     ];
 
     /**

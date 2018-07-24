@@ -17,7 +17,8 @@ use OverNick\Payment\Kernel\Interfaces\BaseInterface;
 class Client extends WechatBaseClient implements BaseInterface
 {
     /**
-     * 二维码/条形码支付
+     * 刷卡支付 (二维码/条形码支付)
+     *
      * https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
      *
      * @param array $params
@@ -25,6 +26,10 @@ class Client extends WechatBaseClient implements BaseInterface
      */
     public function create(array $params)
     {
+        if(empty($params['trade_type'])){
+            $params['trade_type'] = 'MICROPAY';
+        }
+
         if (empty($params['spbill_create_ip'])) {
             $params['spbill_create_ip'] = ('NATIVE' === $params['trade_type']) ? get_server_ip() : get_client_ip();
         }

@@ -9,14 +9,14 @@ namespace OverNick\Payment\Tests\Alipay;
 
 use OverNick\Payment\PaymentManage;
 use OverNick\Payment\Tests\BaseTestCase;
-use OverNick\Payment\Kernel\Tools\BizContent;
 
 /**
  * Class OrderTestCase
  * @package OverNick\Payment\Tests\Alipay
  */
-class OrderTestCase extends BaseTestCase
+class OrderTest extends BaseTestCase
 {
+    // 商户订单号
     protected $order_no = '20190404001101';
 
     protected $driver = PaymentManage::DRIVER_ALIPAY;
@@ -39,7 +39,7 @@ class OrderTestCase extends BaseTestCase
             'body' => '购买一部iPhoneX'
         ];
 
-        $result = $this->getPay($this->driver)->order->create($bizContent, $params);
+        $result = $this->getPay()->order->create($bizContent, $params);
 
         $this->assertEquals('array', gettype($result));
     }
@@ -51,7 +51,7 @@ class OrderTestCase extends BaseTestCase
      */
     public function query()
     {
-        $result = $this->getPay($this->driver)->order->query([
+        $result = $this->getPay()->order->query([
             'out_trade_no' => $this->order_no,
         ]);
 
@@ -65,7 +65,7 @@ class OrderTestCase extends BaseTestCase
      */
     public function close()
     {
-        $result = $this->getPay($this->driver)->order->query([
+        $result = $this->getPay()->order->query([
             'out_trade_no ' => $this->order_no,
         ]);
 

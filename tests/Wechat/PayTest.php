@@ -10,10 +10,12 @@ namespace OverNick\Payment\Tests\Wechat;
 use OverNick\Payment\PaymentManage;
 
 /**
+ * 支付相关
+ *
  * Class BaseTestCase
  * @package OverNick\Payment\Tests\Wechat
  */
-class PayTestCase extends \OverNick\Payment\Tests\BaseTestCase
+class PayTest extends \OverNick\Payment\Tests\BaseTestCase
 {
     protected $driver = PaymentManage::DRIVER_WECHATPAY;
 
@@ -24,12 +26,24 @@ class PayTestCase extends \OverNick\Payment\Tests\BaseTestCase
      */
     public function create()
     {
-        $result = $this->getPay($this->driver)->base->pay([
+        $result = $this->getPay()->pay->create([
             'body' => '这是一个商品',
             'out_trade_no' => '202004160001',
             'total_fee' => 1,
             'auth_code' => '120061098828009406'
         ]);
+
+        $this->assertEquals('array', gettype($result));
+    }
+
+    /**
+     * 生成jsApi插件所需参数
+     *
+     * @test
+     */
+    public function jsApi()
+    {
+        $result = $this->getPay()->pay->jsApi('abcdefg');
 
         $this->assertEquals('array', gettype($result));
     }

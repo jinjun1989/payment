@@ -5,22 +5,27 @@ use OverNick\Payment\PaymentManage;
 use OverNick\Payment\Tests\BaseTestCase;
 
 /**
+ * 订单相关
+ *
  * Class TestCase
  */
-class OrderTestCase extends BaseTestCase
+class OrderTest extends BaseTestCase
 {
+    // 订单号
     protected $order_no = '201904160001';
 
     protected $driver = PaymentManage::DRIVER_WECHATPAY;
 
     /**
+     * 创建订单
+     *
      * @test
      */
     public function create()
     {
         $notify = 'http://www.baidu.com';
 
-        $result = $this->getPay($this->driver)->order->create([
+        $result = $this->getPay()->order->create([
             'out_trade_no' => $this->order_no,
             'body' => '测试商品',
             'total_fee' => 1,
@@ -32,21 +37,28 @@ class OrderTestCase extends BaseTestCase
     }
 
     /**
+     * 查询订单
+     *
      * @test
      */
     public function query()
     {
-        $result = $this->getPay($this->driver)->order->queryByOrderTradeNo($this->order_no);
+        $result = $this->getPay()->order->queryByOrderTradeNo($this->order_no);
 
         $this->assertEquals('array', gettype($result));
     }
 
     /**
+     * 关闭订单
+     *
      * @test
      */
     public function close()
     {
-        $result = $this->getPay($this->driver)->order->close($this->order_no);
+        $result = $this->getPay()->order->closeByOutTradeNo($this->order_no);
+
+        // 使用系统订单
+        // $result = $this->getPay()->order->closeByTradeNo($this->order_no);
 
         $this->assertEquals('array', gettype($result));
     }

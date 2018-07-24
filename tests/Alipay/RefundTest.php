@@ -10,12 +10,13 @@ namespace OverNick\Payment\Tests\Alipay;
 
 use OverNick\Payment\PaymentManage;
 use OverNick\Payment\Tests\BaseTestCase;
-use OverNick\Payment\Kernel\Tools\BizContent;
 
-class RefundTestCase extends BaseTestCase
+class RefundTest extends BaseTestCase
 {
+    // 商户订单号
     protected $order_no = '20190404001101';
 
+    // 商户退单号
     protected $out_request_no = 'R20190505001101';
 
     protected $driver = PaymentManage::DRIVER_ALIPAY;
@@ -34,17 +35,19 @@ class RefundTestCase extends BaseTestCase
             'refund_reason' => '不想要了'
         ];
 
-        $result = $this->getPay($this->driver)->refund->create($bizContent);
+        $result = $this->getPay()->refund->create($bizContent);
 
         $this->assertEquals('array', gettype($result));
     }
 
     /**
+     * 查询退款
+     *
      * @test
      */
     public function query()
     {
-        $result = $this->getPay($this->driver)->refund->query([
+        $result = $this->getPay()->refund->query([
             'out_trade_no' => $this->order_no,
             'out_request_no' => $this->out_request_no
         ]);

@@ -11,6 +11,7 @@
     1.3  [关闭订单](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_3&index=5)   
     1.4  [申请退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_4&index=6)  
     1.5  [查询退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_5&index=7)  
+    1.6  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
 2. alipay (支付宝支付)  
     2.1  [统一下单](https://docs.open.alipay.com/api_1/alipay.trade.create/)  
     2.2  [预创建订单](https://docs.open.alipay.com/api_1/alipay.trade.precreate/)  
@@ -20,13 +21,16 @@
     2.6  [退款查询](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query/)  
     2.7  [通过声波或条码收款](https://docs.open.alipay.com/api_1/alipay.trade.pay)  
     2.8  [PC支付](https://docs.open.alipay.com/270/alipay.trade.page.pay)  
-    2.9  [手机支付](https://docs.open.alipay.com/203/107090/)  
+    2.9  [手机支付](https://docs.open.alipay.com/203/107090/)   
 ## 配置
 1. 将`config/payment.php`拷贝至项目配置文件目录
 2. 修改配置文件中的`default`参数来应用默认使用什么方式进行支付，参数值如上支持列表
 3. 将支付宝/微信的私密信息填写至对应的字段中
 
 ## 使用
+
+如果对微信支付或者支付宝支付不了解或不熟悉的开发人员，建议先前往对应的开发文档进行了解，本SDK仅限于对支付宝支付，微信支付等一定了解的开发人员使用。
+
 1. 初始化支付类
 ```
 <?php
@@ -176,6 +180,38 @@ $content = $qrcode->content();
 // 直接输出图片
 $qrcode->write();
 ```
+
+##### 获取openid
+如果对ouath2流程不熟悉，建议先前往对应的资料页学习  
+```
+// 用于接收code的地址
+$redirect_url = 'http://www.baidu.com'
+
+// 获取跳转地址
+$wxCodeUrl = $pay->auth->getWxCodeUrl($redirect_url);
+
+// 执行跳转
+header("Location:".$wxCodeUrl);
+```
+接收CODE的地址需要进行以下的处理
+```
+// 获取到code（可使用其他更安全的方式进行获取）
+$code = $_GET['code']
+
+// 返回结果
+$result = $pay->auth->token($code);
+```
+成功请求的最终$result结果格式如下
+``` 
+{
+"access_token":"ACCESS_TOKEN",
+"expires_in":7200,
+"refresh_token":"REFRESH_TOKEN",
+"openid":"OPENID",
+"scope":"SCOPE" 
+}
+```
+
 
 ### 支付宝支付
 1. 所有的方法请求都会返回一个数组（array），数组内容为微信返回值，可根据实际情况进行处理

@@ -20,10 +20,14 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected $config = [];
 
     /**
-     * @param null $driver
-     * @return AliPayApp | WechatPayApp
+     * @var
      */
-    protected function getPay($driver = null)
+    protected $driver;
+
+    /**
+     * @return WechatPayApp|AliPayApp
+     */
+    protected function getPay()
     {
         $filePath = __DIR__.DIRECTORY_SEPARATOR.'../config/payment.dev.php';
 
@@ -37,6 +41,6 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
             $this->pay = new \OverNick\Payment\PaymentManage($this->config);
         }
 
-        return $this->pay->driver($driver);
+        return $this->pay->driver($this->driver);
     }
 }

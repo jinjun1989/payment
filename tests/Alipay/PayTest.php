@@ -7,7 +7,6 @@
  */
 namespace OverNick\Payment\Tests\Alipay;
 
-use OverNick\Payment\Kernel\Tools\BizContent;
 use OverNick\Payment\PaymentManage;
 use OverNick\Payment\Tests\BaseTestCase as TestCase;
 
@@ -15,11 +14,13 @@ use OverNick\Payment\Tests\BaseTestCase as TestCase;
  * Class BaseTestCase
  * @package OverNick\Payment\Tests\Alipay
  */
-class PayTestCase extends TestCase
+class PayTest extends TestCase
 {
     protected $driver = PaymentManage::DRIVER_ALIPAY;
 
     /**
+     * 移动端支付
+     *
      * @test
      */
     public function wapPay()
@@ -35,15 +36,18 @@ class PayTestCase extends TestCase
             'subject' => '订单支付',
             'body' => 'O126 PP 17 CRYSTAL  (001) 白色  G SMALL等商品',
             'total_amount' => 0.02,
-            'qr_pay_mode' => 3,
+            'qr_pay_mode' => 3,     // 使用方式查看支付宝文档
         ];
 
-        $result = $this->getPay($this->driver)->pay->wap($bizContent, $params);
+        // 获取值为一个跳转链接
+        $result = $this->getPay()->pay->wap($bizContent, $params);
 
         $this->assertEquals('string', gettype($result));
     }
 
     /**
+     * 网页支付
+     *
      * @test
      */
     public function pagePay()
@@ -59,10 +63,11 @@ class PayTestCase extends TestCase
             'subject' => '订单支付',
             'body' => 'O126 PP 17 CRYSTAL  (001) 白色  G SMALL等商品',
             'total_amount' => 0.02,
-            'qr_pay_mode' => 3,
+            'qr_pay_mode' => 3,     // 使用方式查看支付宝文档
         ];
 
-        $result = $this->getPay($this->driver)->pay->page($bizContent,$params);
+        // 获取值为一个跳转链接
+        $result = $this->getPay()->pay->page($bizContent,$params);
 
         $this->assertEquals('string', gettype($result));
     }

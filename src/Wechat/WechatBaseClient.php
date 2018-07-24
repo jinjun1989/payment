@@ -55,6 +55,8 @@ class WechatBaseClient
     }
 
     /**
+     * 附带证书的请求
+     *
      * @param $uri
      * @param array $params
      * @param string $method
@@ -72,6 +74,8 @@ class WechatBaseClient
     }
 
     /**
+     * 普通请求
+     *
      * @param $uri
      * @param array $params
      * @param string $method
@@ -99,10 +103,11 @@ class WechatBaseClient
 
         $options = array_merge($options, [
             'verify' => false,
+            'http_errors' => false,
             'body' => Xml::build($params)
         ]);
 
-        $response =  $this->httpRequest($method, $uri, $options);
+        $response = $this->httpRequest($method, $uri, $options);
 
         return Xml::toArray($response);
     }

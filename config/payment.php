@@ -43,6 +43,8 @@ return [
             // 沙盒模式
             'sandbox' => false,
             'app_id' => 'xxxx',
+            // 公众号的secret
+            'secret' => 'xxxxxxxxxx',
             'mch_id' => 'your-mch-id',
             // API 密钥
             'key' => 'key-for-signature',
