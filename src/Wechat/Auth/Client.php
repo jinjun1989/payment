@@ -45,6 +45,28 @@ class Client extends WechatBaseClient
     }
 
     /**
+     * 获取小程序的token
+     *
+     * @param $code
+     * @return mixed
+     */
+    public function miniToken($code)
+    {
+        $result = $this->httpRequest('GET', 'https://api.weixin.qq.com/sns/jscode2session', [
+            'http_errors' => false,
+            'verify' => false,
+            'query' => [
+                'appid' => $this->app->config->get('mini_app_id'),
+                'secret' => $this->app->config->get('mini_secret'),
+                'js_code' => $code,
+                'grant_type' => 'authorization_code'
+            ]
+        ]);
+
+        return json_decode($result->getContents(), true);
+    }
+
+    /**
      * 获取用户认证 Access Token
      *
      * @param $code

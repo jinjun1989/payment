@@ -4,14 +4,16 @@
 
 使用命令`composer require overnic/payment`将包引入至项目内容
 
-### 支持列表
+### 功能列表
 1. wechatpay (微信支付)  
     1.1  [统一下单](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1)   
     1.2  [查询订单](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_2&index=4)  
     1.3  [关闭订单](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_3&index=5)   
     1.4  [申请退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_4&index=6)  
     1.5  [查询退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_5&index=7)  
-    1.6  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
+    1.6  [刷卡支付](https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1)  
+    1.7  [微信内H5调起支付](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6)  
+    1.8  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
 2. alipay (支付宝支付)  
     2.1  [统一下单](https://docs.open.alipay.com/api_1/alipay.trade.create/)  
     2.2  [预创建订单](https://docs.open.alipay.com/api_1/alipay.trade.precreate/)  
@@ -73,7 +75,7 @@ $pay->refund
 $pay->pay
 ```
 
-##### 统一下单
+##### 1.1 统一下单
 ```
 <?php
 // 创建订单
@@ -105,19 +107,19 @@ $result = $pay->order->create([
    })
 ```
 
-##### 订单查询
+##### 1.2 查询订单
 ```
 // 通过微信订单号进行订单结果查询
 $result = $pay->order->queryByTransactionId('705030000001xxx');
 // 通过商户订单号进行查询
 $result = $pay->order->queryByOrderTradeNo('D201705030000001');
 ```
-##### 关闭订单
+##### 1.3 关闭订单
 ```
 // 通过商户订单号关闭订单
 $result = $pay->order->closeByOutTradeNo('D201705030000001');
 ```
-##### 订单退款
+##### 1.4 订单退款
 ```
 // 发起退款
 $result = $pay->refund->create([
@@ -127,7 +129,7 @@ $result = $pay->refund->create([
     'refund_fee' => 1
     ]);
 ```
-##### 查询退款
+##### 1.5 查询退款
 ```
 // 查询退款可以使用以下多种方式
 $pay->refund->queryByTransactionId('微信订单号');
@@ -153,9 +155,9 @@ $pay->refund->queryByOutRefundNo('商户退款单号')
         return true;
    }) 
 ```
-#####  微信扫码支付
+##### 1.6 刷卡支付
 ```
-// 扫码支付
+// 刷卡支付，通过输入或扫描微信支付二维码进行支付
 $result = $this->getPay($this->driver)->base->pay([
     'body' => '这是一个商品',             // 商品描述
     'out_trade_no' => '202004160001',   // 商户订单号
@@ -164,24 +166,47 @@ $result = $this->getPay($this->driver)->base->pay([
 ]);
 ```
 
-##### 生成二维码
+##### 1.8 微信内H5调起支付(v0.2.0+)
 ```
-// 实例化二维码类
-$qrcode = new OverNick\Payment\Kerner\Tools\QrCode('二维码内容');
-// 设置二维码长度
-$qrcode->setWith(250);
-// 设置二维码宽度
-$qrcode->setHeight(250);
-
-
-// 获取二维码图片内容
-$content = $qrcode->content();
-
-// 直接输出图片
-$qrcode->write();
+    // JSAPI支付，
+    // 流程，先进行统一下单操作，完成后，获取到下单接口返回的预支付id,然后进行参数获取
+    
+    $prepay_id = '123456789';
+    
+    $result = $pay->pay->jsApi($prepay_id);
+    
+    // 成功请求的最终$result结果格式如下
+    {
+    "appId":"xxxxxxx",
+    "timeStamp":1230894414,
+    "nonceStr":"123456",
+    "package":"prepay_id=123456789",
+    "signType":"MD5" 
+    }
+    
 ```
 
-##### 获取openid
+##### 1.8.1 小程序内调起支付(v0.2.2+)
+```
+    // 小程序支付
+    // 流程，先进行统一下单操作，完成后，获取到下单接口返回的预支付id,然后进行参数获取
+    
+    $prepay_id = '123456789';
+    
+    $result = $pay->pay->miniPay($prepay_id);
+    
+    // 成功请求的最终$result结果格式如下
+    {
+    "appId":"xxxxxxx",
+    "timeStamp":1230894414,
+    "nonceStr":"123456",
+    "package":"prepay_id=123456789",
+    "signType":"MD5" 
+    }
+    
+```
+
+##### 1.7 获取openid (v0.2.1+)
 如果对ouath2流程不熟悉，建议先前往对应的资料页学习  
 ```
 // 用于接收code的地址
@@ -212,6 +237,41 @@ $result = $pay->auth->token($code);
 }
 ```
 
+##### 1.7.1 小程序获取openid (v0.2.2+)
+```
+    // 此处需要先由小程序客户端获取Code值，获取后进行openid的获取
+    
+    // 小程序获取的CODE
+    $code = "123456"
+    
+    // 通过code获取openid
+    $result = $pay->auth->miniToken($code);
+    
+    // $result 返回值如下 
+    {
+      	"openid": "OPENID",
+      	"session_key": "SESSIONKEY"
+    }
+    
+```
+
+
+##### 生成二维码
+```
+// 实例化二维码类
+$qrcode = new OverNick\Payment\Kerner\Tools\QrCode('二维码内容');
+// 设置二维码长度
+$qrcode->setWith(250);
+// 设置二维码宽度
+$qrcode->setHeight(250);
+
+
+// 获取二维码图片内容
+$content = $qrcode->content();
+
+// 直接输出图片
+$qrcode->write();
+```
 
 ### 支付宝支付
 1. 所有的方法请求都会返回一个数组（array），数组内容为微信返回值，可根据实际情况进行处理

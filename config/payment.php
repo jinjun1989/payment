@@ -42,9 +42,14 @@ return [
             'driver' => PaymentManage::DRIVER_WECHATPAY,
             // 沙盒模式
             'sandbox' => false,
+            // 公众号app id
             'app_id' => 'xxxx',
             // 公众号的secret
             'secret' => 'xxxxxxxxxx',
+            // 小程序的app id
+            'mini_app_id' => 'xxxx',
+            // 小程序的而secret
+            'mini_secret'=> '',
             'mch_id' => 'your-mch-id',
             // API 密钥
             'key' => 'key-for-signature',
