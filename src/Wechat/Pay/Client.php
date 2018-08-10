@@ -41,39 +41,16 @@ class Client extends WechatBaseClient implements BaseInterface
      * 生成jssdk getBrandWCPayRequest 所需的参数
      * https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
      *
-     * @param string $prepay_id 统一下单接口返回的预付id（prepay_id)
-     * @return array
-     */
-    public function jsApi($prepay_id)
-    {
-        return $this->jsPay($prepay_id, $this->app->config->get('app_id'));
-    }
-
-    /**
      * 生成小程序支付锁需要的参数
      * https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
      *
      * @param string $prepay_id 统一下单接口返回的预付id（prepay_id)
      * @return array
      */
-    public function miniPay($prepay_id)
-    {
-       return $this->jsPay($prepay_id, $this->app->config->get('mini_app_id'));
-    }
-
-    /**
-     * 小程序和jsapi通用支付
-     *
-     * @param string $prepay_id
-     * @param string $app_id
-     * @param string|null $key
-     *
-     * @return array
-     */
-    public function jsPay($prepay_id, $app_id, $key = null)
+    public function jsApi($prepay_id)
     {
         $result = [
-            'appId' => $app_id,
+            'appId' => $this->app->getAppId(),
             'timeStamp' => time(),
             'nonceStr' => uniqid(),
             'package' => 'prepay_id='.$prepay_id,
@@ -84,5 +61,4 @@ class Client extends WechatBaseClient implements BaseInterface
 
         return $result;
     }
-
 }

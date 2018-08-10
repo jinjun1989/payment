@@ -74,6 +74,40 @@ class WechatPayApp extends ServiceContainer
     }
 
     /**
+     * 使用小程序支付
+     *
+     * @return $this
+     */
+    public function useMiniAppId()
+    {
+        $this->config->set('type', 2);
+        return $this;
+    }
+
+    /**
+     * 使用公众号支付
+     *
+     * @return $this
+     */
+    public function usePubAppId()
+    {
+        $this->config->set('type', 1);
+        return $this;
+    }
+
+    /**
+     * 获取统一下单使用的appid
+     *
+     * @return mixed
+     */
+    public function getAppId()
+    {
+        return $this->config->get('type') === 2 ?
+            $this->config->get('mini_app_id') :
+            $this->config->get('app_id');
+    }
+
+    /**
      * @param \Closure $closure
      *
      * @return \Symfony\Component\HttpFoundation\Response

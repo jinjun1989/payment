@@ -12,7 +12,7 @@
     1.4  [申请退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_4&index=6)  
     1.5  [查询退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_5&index=7)  
     1.6  [刷卡支付](https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1)  
-    1.7  [微信内H5调起支付](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6)  
+    1.7  [微信内H5调起支付，小程序支付](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6)  
     1.8  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
 2. alipay (支付宝支付)  
     2.1  [统一下单](https://docs.open.alipay.com/api_1/alipay.trade.create/)  
@@ -73,6 +73,36 @@ $pay->order
 $pay->refund
 // 支付，指向 OverNick\Payment\Wechat\Pay\Client
 $pay->pay
+// 相关认证，信息，指向OverNick\Payment\Wechat\Auth\Client
+$pay->auth
+```
+
+##### 1.0 公众号支付与小程序支付(v0.2.2+)
+```
+// 因为小程序和公众号使用的appid不一致，所以需要区分使用
+// 可配置信息如下
+
+// 用于区分使用小程序还是公众号的appid
+'type' => 1,
+公众号appid
+'app_id' => 'xxxx',
+// 公众号的secret
+'secret' => 'xxxxxxxxxx',
+
+// 小程序的app id
+'mini_app_id' => 'xxxx',
+// 小程序的而secret
+'mini_secret'=> '',
+
+// 在小程序与公众号appid之间切换
+// 使用公众号 appid
+$pay->usePubAppId()
+// 使用小程序appid
+$pay->useMiniAppId()
+
+// 用例，以下例子最终执行的结果为，使用小程序的appid,进行订单的查询
+$pay->useMiniAppId()->order->queryByTransactionId('xxxxxxx');
+
 ```
 
 ##### 1.1 统一下单
@@ -166,13 +196,21 @@ $result = $this->getPay($this->driver)->base->pay([
 ]);
 ```
 
-##### 1.8 微信内H5调起支付(v0.2.0+)
+##### 1.7 微信内H5调起支付(v0.2.0+)
 ```
     // JSAPI支付，
     // 流程，先进行统一下单操作，完成后，获取到下单接口返回的预支付id,然后进行参数获取
+    $orderInfo = $pay->order->create([
+         'out_trade_no' => 'D201705030000001',       // 商户订单号
+            'body' => '测试商品',                        // 交易简介
+            'total_fee' => 1,                           // 金额，已分为单位
+            'notify_url' => 'http://www.baidu.com',     // 支付成功通知地址
+            'trade_type' => 'JSAPI',                   // 支付方式，详见文档
+    ]);
+    // 获取到预支付id
+    $prepay_id = $orderInfo['prepay_id'];
     
-    $prepay_id = '123456789';
-    
+    // 获取需要输出给js使用的结果
     $result = $pay->pay->jsApi($prepay_id);
     
     // 成功请求的最终$result结果格式如下
@@ -186,14 +224,29 @@ $result = $this->getPay($this->driver)->base->pay([
     
 ```
 
-##### 1.8.1 小程序内调起支付(v0.2.2+)
+##### 1.7.1 小程序内调起支付(v0.2.2+)
 ```
     // 小程序支付
+    
+    // !!!  重要
+    // !!!  重要
+    // !!!  重要
+    // 使用小程序的appId进行操作
+    $pay->useMiniAppId();
+    
     // 流程，先进行统一下单操作，完成后，获取到下单接口返回的预支付id,然后进行参数获取
+    $orderInfo = $pay->order->create([
+             'out_trade_no' => 'D201705030000001',       // 商户订单号
+                'body' => '测试商品',                        // 交易简介
+                'total_fee' => 1,                           // 金额，已分为单位
+                'notify_url' => 'http://www.baidu.com',     // 支付成功通知地址
+                'trade_type' => 'JSAPI',                   // 支付方式，详见文档
+        ]);
+    // 获取到预支付id
+    $prepay_id = $orderInfo['prepay_id'];
     
-    $prepay_id = '123456789';
-    
-    $result = $pay->pay->miniPay($prepay_id);
+    // 获取需要输出给小程序使用的结果
+    $result = $pay->pay->jsApi($prepay_id);
     
     // 成功请求的最终$result结果格式如下
     {
@@ -206,7 +259,7 @@ $result = $this->getPay($this->driver)->base->pay([
     
 ```
 
-##### 1.7 获取openid (v0.2.1+)
+##### 1.8 获取openid (v0.2.1+)
 如果对ouath2流程不熟悉，建议先前往对应的资料页学习  
 ```
 // 用于接收code的地址
@@ -237,7 +290,7 @@ $result = $pay->auth->token($code);
 }
 ```
 
-##### 1.7.1 小程序获取openid (v0.2.2+)
+##### 1.8.1 小程序获取openid (v0.2.2+)
 ```
     // 此处需要先由小程序客户端获取Code值，获取后进行openid的获取
     

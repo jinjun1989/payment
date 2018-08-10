@@ -85,7 +85,7 @@ class WechatBaseClient
     public function rawRequest($uri, array $params = [], $method = 'post',array $options = [])
     {
         if(!array_key_exists('app_id', $params)){
-            $params['appid'] = $this->app->config->get('app_id');
+            $params['appid'] = $this->app->getAppId();
         }
 
         // 基础配置信息

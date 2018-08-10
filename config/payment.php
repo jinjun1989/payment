@@ -40,6 +40,8 @@ return [
          */
         'wechatpay' => [
             'driver' => PaymentManage::DRIVER_WECHATPAY,
+            // 可使用的范围：1,2，1表示使用公众号的appid进行操作，2表示使用小程序的appid
+            'type' => 1,
             // 沙盒模式
             'sandbox' => false,
             // 公众号app id
