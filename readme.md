@@ -15,7 +15,7 @@
     1.7  [微信内H5调起支付，小程序支付](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6)  
     1.8  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
     1.9  [发送红包](https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3)
-    1.10 [企业富婆](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1)
+    1.10 [企业付款](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1)
 2. alipay (支付宝支付)
     2.1  [统一下单](https://docs.open.alipay.com/api_1/alipay.trade.create/)  
     2.2  [预创建订单](https://docs.open.alipay.com/api_1/alipay.trade.precreate/)  
