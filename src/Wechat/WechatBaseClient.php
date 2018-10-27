@@ -84,7 +84,7 @@ class WechatBaseClient
      */
     public function rawRequest($uri, array $params = [], $method = 'post',array $options = [])
     {
-        if(!array_key_exists('app_id', $params)){
+        if(!array_key_exists('appid', $params)){
             $params['appid'] = $this->app->getAppId();
         }
 
@@ -97,7 +97,7 @@ class WechatBaseClient
         ];
 
         // 合并成最终参数
-        $params = array_merge($base, $params);
+        $params = array_filter(array_merge($base, $params));
 
         $params['sign'] = $this->app->getSign($params, $this->app->getKey($uri));
 

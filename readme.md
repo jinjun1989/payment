@@ -14,7 +14,9 @@
     1.6  [刷卡支付](https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1)  
     1.7  [微信内H5调起支付，小程序支付](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6)  
     1.8  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
-2. alipay (支付宝支付)  
+    1.9  [发送红包](https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3)
+    1.10 [企业富婆](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1)
+2. alipay (支付宝支付)
     2.1  [统一下单](https://docs.open.alipay.com/api_1/alipay.trade.create/)  
     2.2  [预创建订单](https://docs.open.alipay.com/api_1/alipay.trade.precreate/)  
     2.3  [交易查询](https://docs.open.alipay.com/api_1/alipay.trade.query/)  
@@ -308,6 +310,32 @@ $result = $pay->auth->token($code);
     
 ```
 
+
+##### 1.9 发送红包 (v0.2.3+)
+```
+// 发送红包
+$result = $this->getPay($this->driver)->base->pay([
+    'send_name' => '测试发红包',                   // 红包发送者名称
+    'mch_billno' => '202004160001',             // 订单号
+    're_openid' => 'xxxxxxxxxxxxxxxxxxxxs',    // 用户openid
+    'total_amount' => 1,                       // 金额
+    'total_num' => 1,                          // 红包发放人数
+    'wishing' => '发红包啦',                    // 红包祝福语
+    'act_name' => '红包活动',                    // 	活动名称
+    'remark' => '这是备注',                     // 备注信息
+]);
+```
+
+##### 1.10 企业付款 (v0.2.3+)
+```
+// 向用户转账
+$result = $this->getPay($this->driver)->base->pay([
+    'partner_trade_no' => '202004160001',       // 商户订单号
+    'openid' => 'xxxxxxxxxxxxxxxxxxxxs',        // 用户openid
+    'amount' => 1,                              // 金额
+    'desc' => '测试'                            //企业付款备注
+]);
+```
 
 ##### 生成二维码
 ```

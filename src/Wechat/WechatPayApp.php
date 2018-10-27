@@ -20,15 +20,18 @@ use OverNick\Payment\Kernel\ServiceContainer;
  * @property \OverNick\Payment\Wechat\Refund\Client     $refund
  * @property \OverNick\Payment\Wechat\Pay\Client        $pay
  * @property \OverNick\Payment\Wechat\Auth\Client       $auth
+ * @property \OverNick\Payment\Wechat\Balance\Client    $balance
  *
  * @package OverNick\Payment\Wechat
  */
 class WechatPayApp extends ServiceContainer
 {
+    const APP_ID = 'app_id';
+    const MINI_APP_ID = 'mini_app_id';
+
     /**
      * @var string
      */
-
     protected $openUrl = 'https://open.weixin.qq.com';
 
     /**
@@ -45,6 +48,7 @@ class WechatPayApp extends ServiceContainer
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class,
         Auth\ServiceProvider::class,
+        Balance\ServiceProvider::class,
     ];
 
     /**
@@ -80,7 +84,7 @@ class WechatPayApp extends ServiceContainer
      */
     public function useMiniAppId()
     {
-        $this->config->set('type', 2);
+        $this->config->set('type', self::MINI_APP_ID);
         return $this;
     }
 
@@ -91,7 +95,7 @@ class WechatPayApp extends ServiceContainer
      */
     public function usePubAppId()
     {
-        $this->config->set('type', 1);
+        $this->config->set('type', self::APP_ID);
         return $this;
     }
 
@@ -102,9 +106,7 @@ class WechatPayApp extends ServiceContainer
      */
     public function getAppId()
     {
-        return $this->config->get('type') === 2 ?
-            $this->config->get('mini_app_id') :
-            $this->config->get('app_id');
+        return $this->config->get($this->config->get('type', self::APP_ID));
     }
 
     /**
