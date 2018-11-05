@@ -106,15 +106,16 @@ class AlipayBaseClient
     }
 
     /**
-     * 合并提交
+     * 格式化数据后请求
      *
-     * @param array $bizContent
-     * @param array $params
+     * @param array $req        请求参数
+     * @param array $attributes biz_content的参数
+     * @param array $field      字段
      * @return array
      */
-    protected function requestMerge(array $bizContent = [],array $params = [])
+    protected function formatRequest(array $req = [],array $attributes = [],array $field = [])
     {
-        BizContent::build($bizContent, $params);
+        $params = BizContent::formatParam($req, $attributes, $field);
 
         return $this->request($params);
     }

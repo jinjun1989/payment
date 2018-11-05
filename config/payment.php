@@ -26,8 +26,6 @@ return [
             'sign_type' => 'RSA2',
             // 支付宝的公钥信息
             'alipay_public_key' => 'xxxx',
-            //支付宝公钥
-            'app_public_key' => 'xxxxx',
             //开发者私钥，由开发者自己生成
             'app_private_key' => 'xxxxxxx',
             // 你也可以在下单时单独设置来想覆盖它
