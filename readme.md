@@ -355,8 +355,9 @@ $qrcode->write();
 ```
 
 ### 支付宝支付
-1. 所有的方法请求都会返回一个数组（array），数组内容为微信返回值，可根据实际情况进行处理
-2. 更换支付方式
+1. 所有的方法请求都会返回一个数组（array），数组内容为支付宝返回值，可根据实际情况进行处理
+2. 包内已经对请求参数的params部分进行了处理，只需要额外填写，notify_url, return_url, app_auth_token参数即可，其他请求参数请参照接口文档中的biz_content参数部分
+3. 更换支付方式
 ```
 // 获取微信支付实例
 $pay = $manage->driver('wechatpay');
@@ -373,16 +374,15 @@ $pay->pay
 
 ##### 统一下单
 ```
-// 公共参数
-$params = ['notify_url' => 'http://123456789.cn'];
 // 请求参数
-$bizContent = [
+$params = [
+    'notify_url' => 'http://123456789.cn',
     'out_trade_no' => '商户订单号',
     'total_amount' => 0.01,         // 金额，单位为元
     'subject' => '购买商品',         // 商品标题
     'body' => '购买一部iPhoneX'      // 商品内容
 ];
-$result = $pay->order->create($bizContent, $params);
+$result = $pay->order->create($params);
 ```
 ##### 查询订单
 ```
@@ -396,29 +396,25 @@ $result = $pay->order->closeByTradeNo('支付宝订单号');
 ```
 #####  申请订单退款
 ```
-$bizContent = [
+$params = [
     'out_trade_no' => '商户订单号',
     'out_request_no' => '商户退单号',
     'refund_amount' => 0.01,
     'refund_reason' => '不想要了'
 ];
-$result = $pay->refund->create($bizContent);
+$result = $pay->refund->create($params);
 ```
 #####  查询订单退款
 ```
 $result = $pay->refund->queryByTradeNo('支付宝订单号', '支付宝退单号');
-$result = $pay->refund->queryByOutTradeNo('商户订单号', '商户退单号')
+$result = $pay->refund->queryByOutTradeNo('商户订单号', '商户退单号');
 ```
 ##### PC支付
 ```
 // 参数参考地址 https://docs.open.alipay.com/270/alipay.trade.page.pay
-
 $params = [
-    'notify_url' => 'http://localhost/pay/ali',
-    'return_url' => 'http://localhost/pay/ali/orderReturn'
-];
-
-$bizContent = [
+ 'notify_url' => 'http://localhost/pay/ali',
+    'return_url' => 'http://localhost/pay/ali/orderReturn',
     'out_trade_no' => 'D20190102001111',
     'product_code' => 'FAST_INSTANT_TRADE_PAY',
     'subject' => '订单支付',
@@ -432,16 +428,14 @@ $bizContent = [
 * !!! 注意
 * 此处返回值为一个URL,可通过链接地址跳转到支付宝付款页面
 */ 
-$url = $pay->pay->page($bizContent,$params)
+$url = $pay->pay->page($params)
 ```
 ##### 移动端支付
 ```
 参数参考地址：https://docs.open.alipay.com/203/107090/
 $params = [
     'notify_url' => 'http://localhost/pay/ali',
-    'return_url' => 'http://localhost/pay/ali/orderReturn'
-];
-$bizContent = [
+    'return_url' => 'http://localhost/pay/ali/orderReturn',
     'out_trade_no' => 'D20190102001112',
     'product_code' => 'FAST_INSTANT_TRADE_PAY',
     'subject' => '订单支付',
@@ -455,7 +449,7 @@ $bizContent = [
     * !!! 注意
     * 此处返回值为一个URL,可通过链接地址跳转到支付宝付款页面
     */ 
-    $url = $pay->pay->wap($bizContent,$params)
+    $url = $pay->pay->wap($params)
 ```
 
 ##### 支付成功通知

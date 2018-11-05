@@ -9,7 +9,6 @@ namespace OverNick\Payment\Alipay\Order;
 
 use OverNick\Payment\Alipay\AlipayBaseClient;
 use OverNick\Payment\Kernel\Interfaces\OrderInterface;
-use OverNick\Payment\Kernel\Tools\BizContent;
 
 /**
  * 订单
@@ -23,51 +22,50 @@ class Client extends AlipayBaseClient implements OrderInterface
      * 创建订单
      * https://docs.open.alipay.com/api_1/alipay.trade.create/
      *
-     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function create(array $bizContent = [], array $params = [])
+    public function create(array $params = [])
     {
-        $params = array_merge([
+        $req = [
             'method' => 'alipay.trade.create',
             'notify_url' => $this->app->config->get('notify_url')
-        ], $params);
+        ];
 
-        return $this->requestMerge($bizContent, $params);
+        return $this->formatRequest($req, $params, ['notify_url', 'app_auth_token']);
     }
 
     /**
      * 预创建订单
      * https://docs.open.alipay.com/api_1/alipay.trade.precreate/
      *
-     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function preCreate(array $bizContent = [],array $params = [])
+    public function preCreate(array $params = [])
     {
-        $params = array_merge($params, [
+        $req = [
             'method' => 'alipay.trade.precreate',
-            'notify_url' => $params['notify_url'] ? : $this->app->config->get('notify_url')
-        ]);
+            'notify_url' => $this->app->config->get('notify_url')
+        ];
 
-        return $this->requestMerge($bizContent, $params);
+        return $this->formatRequest($req, $params, ['notify_url', 'app_auth_token']);
     }
 
     /**
      * 交易查询
      * https://docs.open.alipay.com/api_1/alipay.trade.query/
      *
-     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function query(array $bizContent = [], array $params = [])
+    public function query(array $params = [])
     {
-        $params['method'] = 'alipay.trade.query';
+        $req = [
+            'method' => 'alipay.trade.query'
+        ];
 
-        return $this->requestMerge($bizContent, $params);
+        return $this->formatRequest($req, $params, ['app_auth_token']);
     }
 
     /**
@@ -79,9 +77,9 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function queryByOutTradeNo($out_trade_no, array $params = [])
     {
-        return $this->query([
-            'out_trade_no' => $out_trade_no
-        ], $params);
+        $params['out_trade_no'] = $out_trade_no;
+
+        return $this->query($params);
     }
 
     /**
@@ -93,24 +91,25 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function queryByTradeNo($trade_no, array $params = [])
     {
-        return $this->query([
-            'trade_no' => $trade_no
-        ], $params);
+        $params['trade_no'] = $trade_no;
+
+        return $this->query($params);
     }
 
     /**
      * 关闭订单
      * https://docs.open.alipay.com/api_1/alipay.trade.close/
      *
-     * @param array $bizContent
      * @param array $params
      * @return array
      */
-    public function close(array $bizContent = [], array $params = [])
+    public function close(array $params = [])
     {
-        $params['method'] = 'alipay.trade.close';
+        $req = [
+            'method' => 'alipay.trade.close'
+        ];
 
-        return $this->requestMerge($bizContent, $params);
+        return $this->formatRequest($req, $params, ['app_auth_token', 'notify_url']);
     }
 
     /**
@@ -122,9 +121,9 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function closeByOutTradeNo($out_trade_no, array $params = [])
     {
-        return $this->close([
-            'out_trade_no' => $out_trade_no
-        ]);
+        $params['out_trade_no'] = $out_trade_no;
+
+        return $this->close($params);
     }
 
     /**
@@ -136,8 +135,8 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function closeByTradeNo($trade_no, array $params = [])
     {
-        return $this->close([
-            'trade_no' => $trade_no
-        ]);
+        $params['trade_no'] = $trade_no;
+
+        return $this->close($params);
     }
 }

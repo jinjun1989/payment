@@ -29,17 +29,14 @@ class OrderTest extends BaseTestCase
     public function create()
     {
         $params = [
-            'notify_url' => 'http://123456789.cn'
-        ];
-
-        $bizContent = [
+            'notify_url' => 'http://123456789.cn',
             'out_trade_no' => $this->order_no,
             'total_amount' => 0.01,
             'subject' => '购买商品',
             'body' => '购买一部iPhoneX'
         ];
 
-        $result = $this->getPay()->order->create($bizContent, $params);
+        $result = $this->getPay()->order->create($params);
 
         $this->assertEquals('array', gettype($result));
     }
