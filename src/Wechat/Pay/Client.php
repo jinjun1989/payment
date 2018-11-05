@@ -57,7 +57,7 @@ class Client extends WechatBaseClient implements BaseInterface
             'signType' => 'MD5',
         ];
 
-        $result['paySign'] = $this->app->getSign($result, $key);
+        $result['paySign'] = $this->app->getSign($result);
 
         return $result;
     }
