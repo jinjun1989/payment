@@ -89,7 +89,7 @@ $pay->auth
 公众号appid
 'app_id' => 'xxxx',
 // 公众号的secret
-'secret' => 'xxxxxxxxxx',
+'app_secret' => 'xxxxxxxxxx',
 
 // 小程序的app id
 'mini_app_id' => 'xxxx',

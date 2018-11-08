@@ -41,7 +41,7 @@ class Client extends WechatBaseClient implements BaseInterface
      * 生成jssdk getBrandWCPayRequest 所需的参数
      * https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
      *
-     * 生成小程序支付锁需要的参数
+     * 生成小程序支付所需要的参数
      * https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
      *
      * @param string $prepay_id 统一下单接口返回的预付id（prepay_id)

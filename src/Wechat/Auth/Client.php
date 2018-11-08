@@ -79,7 +79,7 @@ class Client extends WechatBaseClient
             'verify' => false,
             'query' => [
                 'appid' => $this->app->config->get('app_id'),
-                'secret' => $this->app->config->get('secret'),
+                'secret' => $this->app->config->get('app_secret'),
                 'code' => $code,
                 'grant_type' => 'authorization_code'
             ]

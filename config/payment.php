@@ -47,7 +47,7 @@ return [
             // 公众号app id
             'app_id' => 'xxxx',
             // 公众号的secret
-            'secret' => 'xxxxxxxxxx',
+            'app_secret' => 'xxxxxxxxxx',
             // 小程序的app id
             'mini_app_id' => 'xxxx',
             // 小程序的而secret
