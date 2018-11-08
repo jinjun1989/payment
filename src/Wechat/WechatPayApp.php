@@ -9,6 +9,7 @@ namespace OverNick\Payment\Wechat;
 
 use Closure;
 use OverNick\Payment\Kernel\ServiceContainer;
+use OverNick\Support\Arr;
 
 /**
  * 微信支付
@@ -158,5 +159,14 @@ class WechatPayApp extends ServiceContainer
         return !$this->inSandBox() && 'sandboxnew/pay/getsignkey' !== $endpoint ?
             $this->config->get('key') :
             $this['sandbox']->getKey();
+    }
+
+    /**
+     * @param $result
+     * @return bool
+     */
+    public function hasSuccess($result)
+    {
+        return Arr::get($result, 'return_code') === 'SUCCESS' && Arr::get($result, 'result_code') === 'SUCCESS';
     }
 }
