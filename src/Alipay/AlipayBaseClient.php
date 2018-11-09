@@ -8,8 +8,8 @@
 namespace OverNick\Payment\Alipay;
 
 use OverNick\Payment\Kernel\ServiceContainer;
-use OverNick\Payment\Kernel\Tools\BizContent;
 use OverNick\Payment\Kernel\Traits\HttpRequestTrait;
+use OverNick\Support\Arr;
 
 /**
  * Class AlipayBaseClient
@@ -19,6 +19,9 @@ class AlipayBaseClient
 {
     use HttpRequestTrait;
 
+    /**
+     * @var AliPayApp
+     */
     protected $app;
 
     /**
@@ -74,7 +77,7 @@ class AlipayBaseClient
 
         $result = $response->getBody()->getContents();
 
-        return json_decode(trim(BizContent::enCodeToUtf8($result)),  true);
+        return json_decode(trim($this->enCodeToUtf8($result)),  true);
     }
 
     /**
@@ -89,11 +92,22 @@ class AlipayBaseClient
     }
 
     /**
-     * @param array $params
+     * @param array $attributes
      * @return array
      */
-    protected function buildPrams(array $params)
+    protected function buildPrams(array $attributes)
     {
+        // 需要额外处理的字段
+        $filed = [
+            'method',
+            'notify_url',
+            'return_url',
+            'app_auth_token'
+        ];
+
+        // 请求参数
+        $params = Arr::only($attributes, $filed);
+        $params['biz_content'] = $this->enCodeToUtf8(json_encode(Arr::except($attributes, $filed)));
         $params['app_id'] = $this->app->config->get('app_id');
         $params['sign_type'] = strtoupper($this->app->config->get('sign_type'));
         $params['format'] = $this->format;
@@ -106,18 +120,25 @@ class AlipayBaseClient
     }
 
     /**
-     * 格式化数据后请求
-     *
-     * @param array $req        请求参数
-     * @param array $attributes biz_content的参数
-     * @param array $field      字段
-     * @return array
+     * @param $params
      */
-    protected function formatRequest(array $req = [],array $attributes = [],array $field = [])
+    protected function buildNotifyUrl(&$params)
     {
-        $params = BizContent::formatParam($req, $attributes, $field);
+        if(!isset($params['notify_url'])){
+            $params['notify_url'] = $this->app->config->get('notify_url');
+        }
+    }
 
-        return $this->request($params);
+    /**
+     * 字符转码
+     *
+     * @param $string
+     * @param $from_encoding
+     * @return string
+     */
+    public function enCodeToUtf8($string, $from_encoding = 'GBK')
+    {
+        return mb_convert_encoding($string, 'UTF-8', $from_encoding);
     }
 
     /**

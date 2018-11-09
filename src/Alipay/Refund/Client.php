@@ -27,11 +27,9 @@ class Client extends AlipayBaseClient implements RefundInterface
      */
     public function create(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.refund'
-        ];
+        $params['method'] = 'alipay.trade.refund';
 
-        return $this->formatRequest($req, $params, ['app_auth_token']);
+        return $this->request($params);
     }
 
     /**
@@ -43,11 +41,9 @@ class Client extends AlipayBaseClient implements RefundInterface
      */
     public function query(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.fastpay.refund.query'
-        ];
+        $params['method'] = 'alipay.trade.fastpay.refund.query';
 
-        return $this->formatRequest($req, $params, ['app_auth_token']);
+        return $this->request($params);
     }
 
     /**
