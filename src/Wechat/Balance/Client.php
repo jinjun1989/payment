@@ -26,7 +26,7 @@ class Client extends WechatBaseClient
      * @param array $params
      * @return array
      */
-    public function transfers(array $params)
+    public function transfer(array $params)
     {
         if (!array_key_exists('mch_appid', $params)) {
             $params['mch_appid'] = $this->app->getAppId();

@@ -1,12 +1,12 @@
 <?php
-use OverNick\Payment\Wechat\WechatPayApp;
-use OverNick\Payment\PaymentManage;
+
+use OverNick\Payment\Kernel\Tools\PayCode;
 
 return [
     /**
      * 默认调用的支付方式
      */
-    'default' => PaymentManage::DRIVER_ALIPAY,
+    'default' => PayCode::DRIVER_ALIPAY,
     /**
      *
      */
@@ -15,7 +15,7 @@ return [
          * 支付宝支付
          */
         'alipay' => [
-            'driver' => PaymentManage::DRIVER_ALIPAY,
+            'driver' => PayCode::DRIVER_ALIPAY,
             // 沙盒模式
             'sandbox' => false,
             //合作身份者ID，签约账号，以2088开头由16位纯数字组成的字符串，查看地址：https://b.alipay.com/order/pidAndKey.htm
@@ -37,9 +37,9 @@ return [
          * 微信支付
          */
         'wechatpay' => [
-            'driver' => PaymentManage::DRIVER_WECHATPAY,
+            'driver' => PayCode::DRIVER_WECHATPAY,
             // 可使用的范围：1,2，1表示使用公众号的appid进行操作，2表示使用小程序的appid
-            'type' => WechatPayApp::APP_ID,
+            'type' => PayCode::WECHAT_APP_ID,
             // 沙盒模式
             'sandbox' => false,
             // 公众号app id

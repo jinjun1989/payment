@@ -11,7 +11,7 @@
     - 1.3  [关闭订单](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_3&index=5)
     - 1.4  [申请退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_4&index=6)
     - 1.5  [查询退款](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_5&index=7)
-    - 1.6  [刷卡支付](https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1)
+    - 1.6  [刷卡/扫码支付](https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1)
     - 1.7  [微信内H5调起支付，小程序支付](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6)
     - 1.8  [获取openid](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
     - 1.9  [发送红包](https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3)
@@ -26,6 +26,7 @@
     - 2.7  [通过声波或条码收款](https://docs.open.alipay.com/api_1/alipay.trade.pay)
     - 2.8  [PC支付](https://docs.open.alipay.com/270/alipay.trade.page.pay)
     - 2.9  [手机支付](https://docs.open.alipay.com/203/107090/)
+    - 2.10 [转账付款](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ## 配置
 1. 将`config/payment.php`拷贝至项目配置文件目录
 2. 修改配置文件中的`default`参数来应用默认使用什么方式进行支付，参数值如上支持列表
@@ -48,12 +49,14 @@ $manage = new  OverNick\Payment\PaymentManage($config);
 2. 更换支付方式
 ```
 
+// 使用微信支付
+$pay = $manage->driver('wechatpay');
 
 // 使用阿里支付
 $pay = $manage->driver('alipay');
 
 ```
-对应的驱动名称可以使用`PaymentManage`中的常量`DRIVER_WECHATPAY`和`DRIVER_ALIPAY`来代wechtpay和alipay字符，避免因输入错误引发不必要的问题
+对应的驱动名称可以使用`PayCode`类中的常量`DRIVER_WECHATPAY`和`DRIVER_ALIPAY`来代wechtpay和alipay字符，避免因输入错误引发不必要的问题
 
 ## 用例
 
@@ -62,11 +65,6 @@ $pay = $manage->driver('alipay');
 1. 请求参数中的内容，可参考支持列表中的文档地址，以下示例仅使用必须参数进行，SDK底层已经对部分必传参数进行了封装，调用方法传参时，可不传入对应的封装参数如下
 `appid, mch_id, nonce_str, sign, sign_type`
 2. 所有的方法请求都会返回一个数组（array），数组内容为微信返回值，可根据实际情况进行处理
-3. 更换支付方式
-```
-// 获取微信支付实例
-$pay = $manage->driver('wechatpay');
-```
 4. 实例列表
 ```
 // 订单，指向 OverNick\Payment\Wechat\Order\Client
@@ -75,6 +73,8 @@ $pay->order
 $pay->refund
 // 支付，指向 OverNick\Payment\Wechat\Pay\Client
 $pay->pay
+// 资金相关，指向 OverNick\Payment\Wechat\Balance\Client
+$pay->balance
 // 相关认证，信息，指向OverNick\Payment\Wechat\Auth\Client
 $pay->auth
 ```
@@ -85,7 +85,7 @@ $pay->auth
 // 可配置信息如下
 
 // 用于区分使用小程序还是公众号的appid
-'type' => 1,
+'type' => PayCode::WECHAT_APP_ID,
 公众号appid
 'app_id' => 'xxxx',
 // 公众号的secret
@@ -110,6 +110,7 @@ $pay->useMiniAppId()->order->queryByTransactionId('xxxxxxx');
 ##### 1.1 统一下单
 ```
 <?php
+// 参考文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1
 // 创建订单
 $result = $pay->order->create([
     'out_trade_no' => 'D201705030000001',       // 商户订单号
@@ -153,12 +154,13 @@ $result = $pay->order->closeByOutTradeNo('D201705030000001');
 ```
 ##### 1.4 订单退款
 ```
+参考文档：https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_4
 // 发起退款
 $result = $pay->refund->create([
     'out_trade_no' => '商户订单号',
     'out_refund_no' => '商户退款单号',
-    'total_fee' => 1,
-    'refund_fee' => 1
+    'total_fee' => 1,                   // 订单总金额
+    'refund_fee' => 1                   // 退款金额
     ]);
 ```
 ##### 1.5 查询退款
@@ -187,10 +189,10 @@ $pay->refund->queryByOutRefundNo('商户退款单号')
         return true;
    }) 
 ```
-##### 1.6 刷卡支付
+##### 1.6 刷卡/扫码支付
 ```
-// 刷卡支付，通过输入或扫描微信支付二维码进行支付
-$result = $this->getPay($this->driver)->base->pay([
+// 参考文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
+$result = $pay->pay->create([
     'body' => '这是一个商品',             // 商品描述
     'out_trade_no' => '202004160001',   // 商户订单号
     'total_fee' => 1,                   // 金额，已分为单位
@@ -223,7 +225,7 @@ $result = $this->getPay($this->driver)->base->pay([
     "package":"prepay_id=123456789",
     "signType":"MD5" 
     }
-    
+    // 参考文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
 ```
 
 ##### 1.7.1 小程序内调起支付(v0.2.2+)
@@ -238,12 +240,12 @@ $result = $this->getPay($this->driver)->base->pay([
     
     // 流程，先进行统一下单操作，完成后，获取到下单接口返回的预支付id,然后进行参数获取
     $orderInfo = $pay->order->create([
-             'out_trade_no' => 'D201705030000001',       // 商户订单号
-                'body' => '测试商品',                        // 交易简介
-                'total_fee' => 1,                           // 金额，已分为单位
-                'notify_url' => 'http://www.baidu.com',     // 支付成功通知地址
-                'trade_type' => 'JSAPI',                   // 支付方式，详见文档
-        ]);
+        'out_trade_no' => 'D201705030000001',       // 商户订单号
+        'body' => '测试商品',                        // 交易简介
+        'total_fee' => 1,                           // 金额，已分为单位
+        'notify_url' => 'http://www.baidu.com',     // 支付成功通知地址
+        'trade_type' => 'JSAPI',                   // 支付方式，详见文档
+    ]);
     // 获取到预支付id
     $prepay_id = $orderInfo['prepay_id'];
     
@@ -258,7 +260,7 @@ $result = $this->getPay($this->driver)->base->pay([
     "package":"prepay_id=123456789",
     "signType":"MD5" 
     }
-    
+    参考文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_7&index=6
 ```
 
 ##### 1.8 获取openid (v0.2.1+)
@@ -313,8 +315,8 @@ $result = $pay->auth->token($code);
 
 ##### 1.9 发送红包 (v0.2.3+)
 ```
-// 发送红包
-$result = $this->getPay($this->driver)->base->pay([
+// 参考文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3
+$result = $pay->balance->redpack([
     'send_name' => '测试发红包',                   // 红包发送者名称
     'mch_billno' => '202004160001',             // 订单号
     're_openid' => 'xxxxxxxxxxxxxxxxxxxxs',    // 用户openid
@@ -329,7 +331,8 @@ $result = $this->getPay($this->driver)->base->pay([
 ##### 1.10 企业付款 (v0.2.3+)
 ```
 // 向用户转账
-$result = $this->getPay($this->driver)->base->pay([
+//参考文档：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
+$result = $pay->balance->transfer([
     'partner_trade_no' => '202004160001',       // 商户订单号
     'openid' => 'xxxxxxxxxxxxxxxxxxxxs',        // 用户openid
     'amount' => 1,                              // 金额
@@ -346,7 +349,6 @@ $qrcode->setWith(250);
 // 设置二维码宽度
 $qrcode->setHeight(250);
 
-
 // 获取二维码图片内容
 $content = $qrcode->content();
 
@@ -359,9 +361,10 @@ $qrcode->write();
 2. 包内已经对请求参数的params部分进行了处理，只需要额外填写，notify_url, return_url, app_auth_token参数即可，其他请求参数请参照接口文档中的biz_content参数部分
 3. 更换支付方式
 ```
-// 获取微信支付实例
-$pay = $manage->driver('wechatpay');
+// 获取支付宝支付实例
+$pay = $manage->driver('alipay');
 ```
+
 4. 实例列表
 ```
 // 订单，指向 OverNick\Payment\Alipay\Order\Client
@@ -370,11 +373,13 @@ $pay->order
 $pay->refund
 // 支付，指向 OverNick\Payment\Alipay\Pay\Client
 $pay->pay
+// 资金，指向 OverNick\Payment\Alipay\Balance\Client
+$pay->balance
 ```
 
-##### 统一下单
+##### 2.1 统一下单
 ```
-// 请求参数
+// 参考文档：https://docs.open.alipay.com/api_1/alipay.trade.create/
 $params = [
     'notify_url' => 'http://123456789.cn',
     'out_trade_no' => '商户订单号',
@@ -384,18 +389,36 @@ $params = [
 ];
 $result = $pay->order->create($params);
 ```
-##### 查询订单
+
+##### 2.2 预创建订单
+```
+// 参考文档：https://docs.open.alipay.com/api_1/alipay.trade.precreate/
+// 请求参数
+$params = [
+    'notify_url' => 'http://123456789.cn',
+    'out_trade_no' => '商户订单号',
+    'total_amount' => 0.01,         // 金额，单位为元
+    'subject' => '购买商品',         // 商品标题
+    'body' => '购买一部iPhoneX'      // 商品内容
+];
+$result = $pay->order->preCreate($params);
+```
+
+##### 2.3 查询订单
 ```
 $result = $pay->order->queryByOutTradeNo('商户订单号');
 $result = $pay->order->queryByTradeNo('支付宝订单号');
 ```
-##### 关闭订单
+
+##### 2.4 关闭订单
 ```
 $result = $pay->order->closeByOutTradeNo('商户订单号');
 $result = $pay->order->closeByTradeNo('支付宝订单号');
 ```
-#####  申请订单退款
+
+##### 2.5 创建退款
 ```
+// 参考文档：https://docs.open.alipay.com/api_1/alipay.trade.refund/
 $params = [
     'out_trade_no' => '商户订单号',
     'out_request_no' => '商户退单号',
@@ -404,14 +427,31 @@ $params = [
 ];
 $result = $pay->refund->create($params);
 ```
-#####  查询订单退款
+
+##### 2.6 退款查询
 ```
 $result = $pay->refund->queryByTradeNo('支付宝订单号', '支付宝退单号');
 $result = $pay->refund->queryByOutTradeNo('商户订单号', '商户退单号');
 ```
-##### PC支付
+
+##### 2.7 通过声波或条码收款
 ```
-// 参数参考地址 https://docs.open.alipay.com/270/alipay.trade.page.pay
+// 参考地址：https://docs.open.alipay.com/api_1/alipay.trade.pay
+$params = [
+    'notify_url' => 'http://123456789.cn',      // 收款成功通知地址
+    'subject' => '商品购买2',                    // 商品标题
+    'out_trade_no' => '201904160011',           // 交易订单号
+    'scene' => 'bar_code',                      // 支付方式，wave_code表示声波，bar_code表示条码，默认条码支付
+    'body' => 'iPhone X 赠送贴膜',               // 交易内容
+    'total_amount' => 0.01,                     // 金额
+    'auto_code' => '12345678902123'             // 支付授权码
+];
+$result = $pay->refund->create($params);
+```
+
+##### 2.8 PC支付
+```
+// 参数参考地址：https://docs.open.alipay.com/270/alipay.trade.page.pay
 $params = [
  'notify_url' => 'http://localhost/pay/ali',
     'return_url' => 'http://localhost/pay/ali/orderReturn',
@@ -430,9 +470,10 @@ $params = [
 */ 
 $url = $pay->pay->page($params)
 ```
-##### 移动端支付
+
+##### 2.9 移动端支付
 ```
-参数参考地址：https://docs.open.alipay.com/203/107090/
+// 参数参考地址：https://docs.open.alipay.com/203/107090/
 $params = [
     'notify_url' => 'http://localhost/pay/ali',
     'return_url' => 'http://localhost/pay/ali/orderReturn',
@@ -450,6 +491,20 @@ $params = [
     * 此处返回值为一个URL,可通过链接地址跳转到支付宝付款页面
     */ 
     $url = $pay->pay->wap($params)
+```
+
+##### 2.10 转账付款（v0.3.3+）
+```
+// 参数参考地址：https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
+    $params = [
+        'out_biz_no' => 'D123456798',       // 订单号
+        'payee_type' => 'ALIPAY_LOGONID',   // 收款账号类型，默认为支付宝账号
+        'payee_account' => '1@qq.com',      // 收款账号
+        'amount' => '0.1',                  // 转账金额
+        'remark' => '转账给张三'              // 备注信息
+    ];
+
+    $result = $pay->balance->transfer($params)
 ```
 
 ##### 支付成功通知

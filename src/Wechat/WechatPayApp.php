@@ -9,6 +9,7 @@ namespace OverNick\Payment\Wechat;
 
 use Closure;
 use OverNick\Payment\Kernel\ServiceContainer;
+use OverNick\Payment\Kernel\Tools\PayCode;
 use OverNick\Support\Arr;
 
 /**
@@ -27,9 +28,6 @@ use OverNick\Support\Arr;
  */
 class WechatPayApp extends ServiceContainer
 {
-    const APP_ID = 'app_id';
-    const MINI_APP_ID = 'mini_app_id';
-
     /**
      * @var string
      */
@@ -85,7 +83,7 @@ class WechatPayApp extends ServiceContainer
      */
     public function useMiniAppId()
     {
-        $this->config->set('type', self::MINI_APP_ID);
+        $this->config->set('type', PayCode::WECHAT_MINI_APP_ID);
         return $this;
     }
 
@@ -96,7 +94,7 @@ class WechatPayApp extends ServiceContainer
      */
     public function usePubAppId()
     {
-        $this->config->set('type', self::APP_ID);
+        $this->config->set('type', PayCode::WECHAT_APP_ID);
         return $this;
     }
 
@@ -107,7 +105,7 @@ class WechatPayApp extends ServiceContainer
      */
     public function getAppId()
     {
-        return $this->config->get($this->config->get('type', self::APP_ID));
+        return $this->config->get($this->config->get('type', PayCode::WECHAT_APP_ID));
     }
 
     /**

@@ -75,6 +75,8 @@ class PayTest extends TestCase
     }
 
     /**
+     * 扫码支付
+     *
      * @test
      */
     public function payment()

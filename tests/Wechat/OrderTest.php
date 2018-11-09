@@ -1,7 +1,7 @@
 <?php
 namespace OverNick\Payment\Tests\Wechat;
 
-use OverNick\Payment\PaymentManage;
+use OverNick\Payment\Kernel\Tools\PayCode;
 use OverNick\Payment\Tests\BaseTestCase;
 
 /**
@@ -14,7 +14,7 @@ class OrderTest extends BaseTestCase
     // 订单号
     protected $order_no = '201904160001';
 
-    protected $driver = PaymentManage::DRIVER_WECHATPAY;
+    protected $driver = PayCode::DRIVER_WECHATPAY;
 
     /**
      * 创建订单

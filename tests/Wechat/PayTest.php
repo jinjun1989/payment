@@ -7,7 +7,8 @@
  */
 namespace OverNick\Payment\Tests\Wechat;
 
-use OverNick\Payment\PaymentManage;
+use OverNick\Payment\Kernel\Tools\PayCode;
+use OverNick\Payment\Tests\BaseTestCase;
 
 /**
  * 支付相关
@@ -15,9 +16,9 @@ use OverNick\Payment\PaymentManage;
  * Class BaseTestCase
  * @package OverNick\Payment\Tests\Wechat
  */
-class PayTest extends \OverNick\Payment\Tests\BaseTestCase
+class PayTest extends BaseTestCase
 {
-    protected $driver = PaymentManage::DRIVER_WECHATPAY;
+    protected $driver = PayCode::DRIVER_WECHATPAY;
 
     /**
      * 扫码支付
