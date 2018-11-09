@@ -27,6 +27,10 @@ class Client extends AlipayBaseClient implements BaseInterface
     {
         $params['method'] = 'alipay.trade.pay';
 
+        if(!isset($params['scene'])){
+            $params['scene'] = 'bar_code';
+        }
+
         return $this->request($params);
     }
 

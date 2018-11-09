@@ -28,6 +28,7 @@ class AliPayApp extends ServiceContainer
         Pay\ServiceProvider::class,
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class,
+        Balance\ServiceProvider::class,
     ];
 
     /**

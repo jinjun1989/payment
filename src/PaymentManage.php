@@ -8,8 +8,7 @@
 namespace OverNick\Payment;
 
 use OverNick\Payment\Alipay\AliPayApp;
-use OverNick\Payment\Kernel\Providers\ClientServiceProvider;
-use OverNick\Payment\Kernel\Providers\LogServiceProvider;
+use OverNick\Payment\Kernel\Tools\PayCode;
 use OverNick\Payment\Wechat\WechatPayApp;
 use OverNick\Support\Manager;
 
@@ -24,10 +23,6 @@ use OverNick\Support\Manager;
  */
 class PaymentManage extends Manager
 {
-
-    const DRIVER_WECHATPAY = 'wechatpay';
-    const DRIVER_ALIPAY = 'alipay';
-
     /**
      * @return mixed
      */
@@ -41,7 +36,7 @@ class PaymentManage extends Manager
      */
     protected function createAlipayDriver()
     {
-        return new AliPayApp($this->getConfigure('drivers.'.self::DRIVER_ALIPAY));
+        return new AliPayApp($this->getConfigure('drivers.'.PayCode::DRIVER_ALIPAY));
     }
 
     /**
@@ -49,7 +44,7 @@ class PaymentManage extends Manager
      */
     protected function createWechatPayDriver()
     {
-        return new WechatPayApp($this->getConfigure('drivers.'.self::DRIVER_WECHATPAY));
+        return new WechatPayApp($this->getConfigure('drivers.'.PayCode::DRIVER_WECHATPAY));
     }
 
     /**

@@ -7,7 +7,7 @@
  */
 namespace OverNick\Payment\Tests\Wechat;
 
-use OverNick\Payment\PaymentManage;
+use OverNick\Payment\Kernel\Tools\PayCode;
 use OverNick\Payment\Tests\BaseTestCase;
 use OverNick\Support\Str;
 
@@ -20,7 +20,7 @@ use OverNick\Support\Str;
 class AuthTest extends BaseTestCase
 {
 
-    protected $driver = PaymentManage::DRIVER_WECHATPAY;
+    protected $driver = PayCode::DRIVER_WECHATPAY;
 
     /**
      * 获取wxCodeUrl

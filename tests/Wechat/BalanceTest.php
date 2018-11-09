@@ -7,7 +7,7 @@
  */
 namespace OverNick\Payment\Tests\Wechat;
 
-use OverNick\Payment\PaymentManage;
+use OverNick\Payment\Kernel\Tools\PayCode;
 use OverNick\Payment\Tests\BaseTestCase;
 
 /**
@@ -16,14 +16,14 @@ use OverNick\Payment\Tests\BaseTestCase;
  */
 class BalanceTest extends BaseTestCase
 {
-    protected $driver = PaymentManage::DRIVER_WECHATPAY;
+    protected $driver = PayCode::DRIVER_WECHATPAY;
 
     /**
      * @test
      */
-    public function transfers()
+    public function transfer()
     {
-        $result = $this->getPay()->balance->transfers([
+        $result = $this->getPay()->balance->transfer([
             'partner_trade_no' => '202004160001',       // 商户订单号
             'openid' => 'xxxxxxxxxxxxxxxxxxxxs',        // 用户openid
             'amount' => 1,                              // 金额
