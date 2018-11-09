@@ -9,7 +9,6 @@ namespace OverNick\Payment\Alipay\Pay;
 
 use OverNick\Payment\Alipay\AlipayBaseClient;
 use OverNick\Payment\Kernel\Interfaces\BaseInterface;
-use OverNick\Payment\Kernel\Tools\BizContent;
 
 /**
  * Class Client
@@ -26,11 +25,9 @@ class Client extends AlipayBaseClient implements BaseInterface
      */
     public function create(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.pay'
-        ];
+        $params['method'] = 'alipay.trade.pay';
 
-        return $this->formatRequest($req, $params, ['notify_url', 'app_auth_token']);
+        return $this->request($params);
     }
 
     /**
@@ -42,11 +39,7 @@ class Client extends AlipayBaseClient implements BaseInterface
      */
     public function page(array $params)
     {
-        $req = [
-            'method' => 'alipay.trade.page.pay'
-        ];
-
-        BizContent::formatParam($req, $params, ['notify_url', 'return_url']);
+        $params['method'] = 'alipay.trade.page.pay';
 
         return $this->buildUrl($params);
     }
@@ -60,11 +53,7 @@ class Client extends AlipayBaseClient implements BaseInterface
      */
     public function wap(array $params)
     {
-        $req = [
-            'method' => 'alipay.trade.wap.pay'
-        ];
-
-        BizContent::formatParam($req, $params, ['notify_url', 'return_url']);
+        $params['method'] = 'alipay.trade.wap.pay';
 
         return $this->buildUrl($params);
     }

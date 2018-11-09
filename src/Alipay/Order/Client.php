@@ -27,12 +27,11 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function create(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.create',
-            'notify_url' => $this->app->config->get('notify_url')
-        ];
+        $params['method'] = 'alipay.trade.create';
 
-        return $this->formatRequest($req, $params, ['notify_url', 'app_auth_token']);
+        $this->buildNotifyUrl($params);
+
+        return $this->request($params);
     }
 
     /**
@@ -44,12 +43,11 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function preCreate(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.precreate',
-            'notify_url' => $this->app->config->get('notify_url')
-        ];
+        $params['method'] = 'alipay.trade.precreate';
 
-        return $this->formatRequest($req, $params, ['notify_url', 'app_auth_token']);
+        $this->buildNotifyUrl($params);
+
+        return $this->request($params);
     }
 
     /**
@@ -61,11 +59,9 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function query(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.query'
-        ];
+        $params['method'] = 'alipay.trade.query';
 
-        return $this->formatRequest($req, $params, ['app_auth_token']);
+        return $this->request($params);
     }
 
     /**
@@ -105,11 +101,9 @@ class Client extends AlipayBaseClient implements OrderInterface
      */
     public function close(array $params = [])
     {
-        $req = [
-            'method' => 'alipay.trade.close'
-        ];
+        $params['method'] = 'alipay.trade.close';
 
-        return $this->formatRequest($req, $params, ['app_auth_token', 'notify_url']);
+        return $this->request($params);
     }
 
     /**
