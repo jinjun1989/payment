@@ -190,7 +190,7 @@ $pay->refund->queryByOutRefundNo('商户退款单号')
 ##### 1.6 刷卡支付
 ```
 // 刷卡支付，通过输入或扫描微信支付二维码进行支付
-$result = $this->getPay($this->driver)->base->pay([
+$result = $pay->pay->create([
     'body' => '这是一个商品',             // 商品描述
     'out_trade_no' => '202004160001',   // 商户订单号
     'total_fee' => 1,                   // 金额，已分为单位
@@ -314,7 +314,7 @@ $result = $pay->auth->token($code);
 ##### 1.9 发送红包 (v0.2.3+)
 ```
 // 发送红包
-$result = $this->getPay($this->driver)->base->pay([
+$result = $pay->balance->redpack([
     'send_name' => '测试发红包',                   // 红包发送者名称
     'mch_billno' => '202004160001',             // 订单号
     're_openid' => 'xxxxxxxxxxxxxxxxxxxxs',    // 用户openid
@@ -329,7 +329,7 @@ $result = $this->getPay($this->driver)->base->pay([
 ##### 1.10 企业付款 (v0.2.3+)
 ```
 // 向用户转账
-$result = $this->getPay($this->driver)->base->pay([
+$result = $pay->balance->transfer([
     'partner_trade_no' => '202004160001',       // 商户订单号
     'openid' => 'xxxxxxxxxxxxxxxxxxxxs',        // 用户openid
     'amount' => 1,                              // 金额
@@ -345,7 +345,6 @@ $qrcode = new OverNick\Payment\Kerner\Tools\QrCode('二维码内容');
 $qrcode->setWith(250);
 // 设置二维码宽度
 $qrcode->setHeight(250);
-
 
 // 获取二维码图片内容
 $content = $qrcode->content();
@@ -371,7 +370,7 @@ $pay->refund
 $pay->pay
 ```
 
-##### 统一下单
+##### 2.1 统一下单
 ```
 // 公共参数
 $params = ['notify_url' => 'http://123456789.cn'];
@@ -384,17 +383,17 @@ $bizContent = [
 ];
 $result = $pay->order->create($bizContent, $params);
 ```
-##### 查询订单
+##### 2.3 查询订单
 ```
 $result = $pay->order->queryByOutTradeNo('商户订单号');
 $result = $pay->order->queryByTradeNo('支付宝订单号');
 ```
-##### 关闭订单
+##### 2.4 关闭订单
 ```
 $result = $pay->order->closeByOutTradeNo('商户订单号');
 $result = $pay->order->closeByTradeNo('支付宝订单号');
 ```
-#####  申请订单退款
+##### 2.5 申请订单退款
 ```
 $bizContent = [
     'out_trade_no' => '商户订单号',
@@ -404,12 +403,12 @@ $bizContent = [
 ];
 $result = $pay->refund->create($bizContent);
 ```
-#####  查询订单退款
+##### 2.6 查询订单退款
 ```
 $result = $pay->refund->queryByTradeNo('支付宝订单号', '支付宝退单号');
 $result = $pay->refund->queryByOutTradeNo('商户订单号', '商户退单号')
 ```
-##### PC支付
+##### 2.8 PC支付
 ```
 // 参数参考地址 https://docs.open.alipay.com/270/alipay.trade.page.pay
 
@@ -434,7 +433,7 @@ $bizContent = [
 */ 
 $url = $pay->pay->page($bizContent,$params)
 ```
-##### 移动端支付
+##### 2.9 移动端支付
 ```
 参数参考地址：https://docs.open.alipay.com/203/107090/
 $params = [
