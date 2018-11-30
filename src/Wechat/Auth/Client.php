@@ -37,11 +37,11 @@ class Client extends WechatBaseClient
             'scope' => $scope
         ];
 
-        if(!is_null($state)){
+        if (!is_null($state)) {
             $query['state'] = $state;
         }
 
-        return 'https://open.weixin.qq.com/connect/oauth2/authorize?'.http_build_query($query).'#wechat_redirect';
+        return 'https://open.weixin.qq.com/connect/oauth2/authorize?' . http_build_query($query) . '#wechat_redirect';
     }
 
     /**
@@ -86,6 +86,28 @@ class Client extends WechatBaseClient
         ]);
 
         return json_decode($result->getContents(), true);
+    }
+
+    /**
+     * 获取小程序中的微信信息
+     *
+     * @param $code
+     * @param $iv
+     * @param $encryptedData
+     * @return mixed
+     */
+    public function miniUserInfo($code, $iv, $encryptedData)
+    {
+        $result = $this->miniToken($code);
+
+        $data = openssl_decrypt(
+            base64_decode($encryptedData),
+            "AES-128-CBC",
+            base64_decode($result['session_key']),
+            OPENSSL_CIPHER_RC2_128,
+            base64_decode($iv));
+
+        return json_decode( $data  , true);
     }
 
 }
